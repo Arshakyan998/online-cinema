@@ -14,7 +14,7 @@ const Category: React.FC<Props> = ({ category }) => {
           <li key={el}>
             <Link
               href="typesscript:void(0)"
-              className="text-white text-sm font-normal px-6 py-20 rounded-3xl border-black border border-solid"
+              className="text-white text-sm font-normal   rounded-3xl border-black border border-solid px-6 py-20"
             >
               {el}
             </Link>

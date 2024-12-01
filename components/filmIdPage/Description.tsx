@@ -81,7 +81,7 @@ const Description: React.FC<IFilm> = ({
           <h3 className="text-3xl mb-24">Пол фильм</h3>
           {infoAbout.map(({ description, title }) => {
             return (
-              <p className="color-white mb-6 text-base">
+              <p className="color-white mb-6 text-base" key={title}>
                 <span className="color-medium-gray text-base font-semibold">
                   {title} :
                 </span>{" "}
@@ -89,7 +89,7 @@ const Description: React.FC<IFilm> = ({
               </p>
             );
           })}
-          <div className="px-4  border-black border border-solid border-l-0 border-r-0 items-start gap-5">
+          <div className="px-4  border-black border border-solid border-l-0 border-r-0 items-start gap-5 flex">
             <p className="color-white mb-6 text-base">Genre:</p>
             <Category category={genres.map((el) => el.genre)} />
           </div>

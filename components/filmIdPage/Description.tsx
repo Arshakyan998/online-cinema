@@ -1,11 +1,11 @@
-import type { IFilm } from "@/store/filmByIdQuery/type";
+import type { IActor, IFilm } from "@/store/filmByIdQuery/type";
 import Category from "@/UIkit/Category";
 import Tags from "@/UIkit/Tags";
+import { Helper } from "@/utils/Helper";
 import { Rate } from "antd";
-import { title } from "process";
 import React from "react";
 
-const Description: React.FC<IFilm> = ({
+const Description: React.FC<IFilm & { staff: Record<string, IActor[]> }> = ({
   nameRu,
   ratingKinopoiskVoteCount,
   ratingKinopoisk,
@@ -18,12 +18,12 @@ const Description: React.FC<IFilm> = ({
   filmLength,
   lastSync,
   genres,
-  ...data
+  staff,
 }) => {
   const rating = (ratingImdb + ratingKinopoisk) / 2;
 
-  let hours = Math.trunc(filmLength / 60);
-  let minutes = Math.trunc(filmLength % 60);
+  const hours = Math.trunc(filmLength / 60);
+  const minutes = Math.trunc(filmLength % 60);
 
   const duration = `${hours}:${minutes}`;
 
@@ -70,11 +70,18 @@ const Description: React.FC<IFilm> = ({
         <h5 className="h-6 color-white mb-4 text-2xl"> Про фильм</h5>
         <p className="color-white mb-6 text-base max-w-3xl">{description}</p>
 
-        <p className="color-white mb-6 text-base">
-          <span className="color-medium-gray text-base font-semibold">
-            Страна(ы)։ {countries.map((el) => el.country + " ")}
-          </span>
-        </p>
+        {Object.keys(staff).map((el: string) => {
+          const fullStaff = staff[el].slice(0, 10);
+
+          return (
+            <p className="color-white mb-6 text-base" key={el}>
+              <span className="color-medium-gray text-base font-semibold">
+                {fullStaff[0]?.professionText}։{" "}
+                {Helper.addVirgule(fullStaff, "nameRu", "span")}
+              </span>
+            </p>
+          );
+        })}
       </div>
       <div className="columns-xl-8 columns-x mb-24 justify-start">
         <div className="box-border">

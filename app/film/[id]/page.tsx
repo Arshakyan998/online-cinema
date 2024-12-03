@@ -1,10 +1,11 @@
 import { Metadata, NextApiHandler, ResolvingMetadata } from "next";
 import React from "react";
-import { SearchParams } from "../Types";
+import { SearchParams } from "../../Types";
 import { filmApiGetById } from "@/store/filmByIdQuery/api";
 import { store } from "@/store/store";
 import Player from "@/components/filmIdPage/Player";
 import Description from "@/components/filmIdPage/Description";
+import { getStaff } from "@/store/filmByIdQuery/FilmByIdQuery";
 
 export async function generateMetadata(
   { params }: SearchParams,
@@ -39,13 +40,18 @@ const Film = async ({ params }: SearchParams) => {
   const { data, isLoading, error } = await store.dispatch(
     filmApiGetById.endpoints.getFilmBydId.initiate({ id })
   );
+
+  const { data: Actors } = await store.dispatch(
+    getStaff.endpoints.getStaff.initiate({ id })
+  );
+
   if (isLoading) return <div>Loading</div>;
   if (error) return <div>Error</div>;
 
   return (
     <div className="py-10">
       <Player id={data?.kinopoiskId || 0} url={data?.coverUrl || ""} />
-      <Description {...data} />
+      <Description {...data} staff={Actors} />
     </div>
   );
 };

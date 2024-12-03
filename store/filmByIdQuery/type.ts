@@ -1,5 +1,16 @@
 import { ICountry, IGenre } from "../types";
 
+
+export  interface IActor {
+  staffId: number;
+  nameRu: string;
+  nameEn: string;
+  description: string;
+  posterUrl: string;
+  professionText: string;
+  professionKey: string;
+}
+
 export interface IFilm {
   kinopoiskId: number;
   kinopoiskHDId: string | null;

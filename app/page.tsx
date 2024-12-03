@@ -3,10 +3,9 @@ import Posts from "./Posts";
 import { Container } from "@/components/Container";
 import { Content } from "@/components/mainPage/Content";
 import { Genres } from "@/components/mainPage/Geners";
-import Slider from "@/components/mainPage/Slider";
+import SectionWithCategory from "@/components/mainPage/SectionWithCategory";
 import { SearchParams } from "./Types";
 
- 
 export async function generateMetadata(
   { params, searchParams }: SearchParams,
   parent: ResolvingMetadata
@@ -34,7 +33,17 @@ export default function Home() {
     <Container>
       <Content />
       {/* <Genres/> */}
-      <Slider />
+      <SectionWithCategory
+        sliderOn
+        withAnimation
+        categoryName="В Тренде"
+         requestType="trades"
+      />
+      <SectionWithCategory
+        categoryName="Лучше за все время"
+        withAnimation
+        requestType="bestAllTime"
+      />
     </Container>
   );
 }

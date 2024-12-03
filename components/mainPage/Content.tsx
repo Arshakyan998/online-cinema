@@ -1,6 +1,7 @@
 import { filmsApi } from "@/store/filmsQuery/api";
 import { store } from "@/store/store";
 import Button from "@/UIkit/Button";
+import { Helper } from "@/utils/Helper";
 import Image from "next/image";
 import React from "react";
 
@@ -54,19 +55,20 @@ export const Content = async () => {
                   <li className="border border-white px-2 py-1 rounded-md">
                     {dataForMainPoster.type}
                   </li>
-                
                 </ul>
                 <p className="text-white mb-8">
                   <strong className="text-gray-400">Жанр{lastKey} </strong>{" "}
-                  {dataForMainPoster?.genres.map((el, i, arr) => (
-                    <span key={el.genre}>
-                      {el.genre}
-                      {i === arr.length - 1 ? "" : ","}{" "}
-                    </span>
-                  ))}
+                  {Helper.addVirgule(
+                    dataForMainPoster?.genres,
+                    "genre",
+                    "span"
+                  )}
                 </p>
                 <div className="flex gap-4">
-                  <Button isLink href={`/${dataForMainPoster.kinopoiskId}`} />
+                  <Button
+                    isLink
+                    href={`/film/${dataForMainPoster.kinopoiskId}`}
+                  />
 
                   <a
                     href="#"

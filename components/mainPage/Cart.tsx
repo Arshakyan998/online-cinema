@@ -32,7 +32,7 @@ const Cart: React.FC<Props> = ({
           }}
         />
         <Link
-          href={`/${filmId}`}
+          href={`/film/${filmId}`}
           className="absolute bottom-4 left-4 bg-white text-black text-sm px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-200 transition"
         >
           Смотреть сейчас<i className="fas fa-play"></i>

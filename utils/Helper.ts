@@ -7,7 +7,7 @@ export class Helper {
     tag: keyof ReactHTML = "span",
     className?: string
   ) => {
-    return arr.map((el, i) => {
+    return arr?.map((el, i) => {
       const content = (typeof el === "object" ? el[key] : el) as string;
 
       if (!content) return null;
@@ -20,5 +20,15 @@ export class Helper {
         contentWithVirgule
       );
     });
+  };
+
+  static createPagination = ({
+    total,
+    pageCount,
+  }: {
+    total: number;
+    pageCount: number;
+  }) => {
+    return new Array(total / pageCount).map((_, i) => i + 1);
   };
 }

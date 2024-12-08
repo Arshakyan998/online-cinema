@@ -3,6 +3,7 @@ import React from "react";
 import type { IFilms } from "@/store/types";
 import { Rate } from "antd";
 import Link from "next/link";
+import { Helper } from "@/utils/Helper";
 
 interface Props extends IFilms {
   imgHeight: null | number;
@@ -15,7 +16,7 @@ const Cart: React.FC<Props> = ({
   genres,
   imgHeight,
   filmId,
-  rating,
+  rating=0,
 }) => {
   return (
     <div className=" rounded-lg overflow-hidden  cursor-pointer  mx-2">
@@ -42,10 +43,10 @@ const Cart: React.FC<Props> = ({
         <div className="text-2xl font-bold text-white mb-2">{year}</div>
         <h4 className="text-lg text-white font-bold mb-1">{nameRu}</h4>
         <div className="text-2xl font-bold text-white mb-2">
-          <Rate allowHalf disabled count={10} value={rating ? +rating : 1} />
+          {rating  && <Rate allowHalf disabled count={10} value={rating ? +rating : 1} /> }
         </div>
         <h6 className="text-sm text-gray-400">
-          {genres.map((el) => el.genre + " ")}
+          {Helper.addVirgule(genres, "genre", "span")}
         </h6>
       </div>
     </div>

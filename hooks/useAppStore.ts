@@ -1,4 +1,5 @@
 import { AppStore } from "@/store/store";
 import { useStore } from "react-redux";
 
-export const useAppStore = useStore.withTypes<AppStore>();
+const useAppStore = useStore.withTypes<AppStore>();
+export default useAppStore;

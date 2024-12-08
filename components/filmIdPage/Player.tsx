@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 interface Props {
   id: number;
@@ -25,7 +25,7 @@ const Player: React.FC<Props> = ({ id, url }) => {
           contextMenu="12"
           security=""
           allowFullScreen
-        ></iframe>
+        />
       </div>
     </div>
   );

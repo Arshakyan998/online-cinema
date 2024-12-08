@@ -1,6 +1,15 @@
+"use client";
+
 import React from "react";
-import { Container } from "./Container";
 import Link from "next/link";
+
+import { Input } from "@/UIkit";
+import { useGetGenresQuery } from "@/store/genreQuery/api";
+import { useAppDispatch } from "@/hooks";
+import { saveGenres } from "@/store/genreQuery/saveGeners";
+import Container from "./Container";
+import { useRouter, useSearchParams } from "next/navigation";
+import Loading from "./Loading";
 
 export const Header = () => {
   const routes = [
@@ -18,6 +27,31 @@ export const Header = () => {
     },
   ];
 
+  const { data, isLoading, error } = useGetGenresQuery(undefined);
+
+  const [selectedGenres, setSelectedGenres] = React.useState<number[]>([]);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const dispatch = useAppDispatch();
+
+  if (isLoading) return <Loading />;
+
+  const onChangeHandler = (e: number[]) => {
+    setSelectedGenres(e);
+  };
+
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (selectedGenres.length) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("genres", selectedGenres.toString());
+      router.replace(`/search/?${params.toString()}`);
+      dispatch(saveGenres.actions.saveGenres(selectedGenres));
+    }
+  };
+
   return (
     <header className="py-5 shadow-header-box-shadow">
       <Container>
@@ -31,8 +65,7 @@ export const Header = () => {
                     href={el.route}
                     className="hover:text-[#58DDA3]  hover:transition-colors"
                   >
-                    {" "}
-                    {el.title}{" "}
+                    {el.title}
                   </Link>{" "}
                 </li>
               );
@@ -40,9 +73,19 @@ export const Header = () => {
           </ul>
           <div className="flex items-center gap-5">
             <div className="search__block">
-              <form className="input-group  w-[402px] m-auto">
-                <button> M</button>
-                <input />
+              <form className="w-[402px] m-auto" onSubmit={submit}>
+                <Input
+                  icon="Search"
+                  onChange={onChangeHandler}
+                  value=""
+                  defaultValue=""
+                  data={data || []}
+                />
+                {/* <span>
+                  <Search />
+                </span>
+                <input /> */}
+                <button>Submit</button>
               </form>
             </div>
           </div>

@@ -1,5 +1,7 @@
 import React, { PropsWithChildren } from "react";
 
-export const Container = ({ children }: PropsWithChildren) => {
+const Container = ({ children }: PropsWithChildren) => {
   return <div className="container  mx-auto">{children}</div>;
 };
+
+export default Container;

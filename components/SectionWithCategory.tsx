@@ -8,8 +8,11 @@ import "slick-carousel/slick/slick-theme.css";
 
 import SlickSlider, { Settings } from "react-slick";
 
+import { Skeleton } from "antd";
 import Cart from "./Cart";
 import Link from "next/link";
+import { useObserver } from "@/hooks";
+import { IData } from "@/store/types";
 
 const MOVIES_TYPES = {
   trades: "TOP_100_POPULAR_FILMS",
@@ -21,14 +24,16 @@ interface Props {
   sliderOn?: boolean;
   withAnimation?: boolean;
   categoryName: string;
-  requestType: keyof typeof MOVIES_TYPES;
+  requestType?: keyof typeof MOVIES_TYPES;
+  externalData?: IData<"films">;
 }
 
 const SectionWithCategory: React.FC<Props> = ({
   sliderOn,
   withAnimation,
   categoryName,
-  requestType,
+  requestType = "bestAllTime",
+  externalData,
 }) => {
   const settings: Settings = {
     dots: false,
@@ -39,19 +44,52 @@ const SectionWithCategory: React.FC<Props> = ({
     arrows: false,
   };
 
-  const { data, error, isLoading } = useTrendingMoviesQuery({
-    type: MOVIES_TYPES[requestType],
-    page: 1,
-  });
+  const {
+    data: moviesData,
+    error,
+    isLoading,
+  } = useTrendingMoviesQuery(
+    {
+      type: MOVIES_TYPES[requestType],
+      page: 1,
+    },
+    {
+      skip: !!externalData?.films?.length || !!externalData?.items?.length,
+    }
+  );
+
+  const data = externalData || moviesData;
 
   const [imgHeight, setImgHeight] = React.useState<number | null>(null);
   const animatedElements = React.useRef<
     WeakMap<HTMLDivElement, HTMLDivElement>
   >(new WeakMap());
+  const rootRef = React.useRef<HTMLElement>(null);
+  const observer = useObserver({ root: rootRef.current });
+
+  let delay = 1;
 
   const createAnimation = (element: HTMLDivElement | null, index: number) => {
     if (!element || animatedElements.current.has(element)) return;
     animatedElements.current.set(element, element);
+
+    if (delay < 5) {
+      delay++;
+    } else {
+      delay = 2;
+    }
+
+    // const delay =
+    //   (index > 3 ? index - Math.trunc(Math.abs(index - index / 4)) : index) *
+    //   200;
+
+    // console.log({
+    //   mt: Math.trunc(index / 4) * 100,
+    //   element,
+    //   index,
+    //   delay,
+    // }) ;
+
     const opacityKeyframes = new KeyframeEffect(
       element,
       [
@@ -61,7 +99,7 @@ const SectionWithCategory: React.FC<Props> = ({
       {
         duration: 500,
         easing: "ease-out",
-        delay: index * 150,
+        delay: delay * 200,
         fill: "forwards",
       }
     );
@@ -72,8 +110,11 @@ const SectionWithCategory: React.FC<Props> = ({
       element.style.opacity = "1";
       element.style.transform = "translateY(0)";
     });
-
-    opacityAnimation.play();
+    if (sliderOn) {
+      opacityAnimation.play();
+      return;
+    }
+    observer(() => opacityAnimation.play()).observe(element);
   };
 
   useEffect(() => {
@@ -95,7 +136,8 @@ const SectionWithCategory: React.FC<Props> = ({
   }, [data?.films]);
 
   if (error) return <div>error</div>;
-  if (isLoading) return <div>Loading</div>;
+  if (isLoading)
+    return <Skeleton className="w-3/12" active paragraph={{ rows: 0 }} />;
 
   const content = data?.films.map((el, i) => {
     const styleWithAnimation: CSSProperties = withAnimation
@@ -103,21 +145,28 @@ const SectionWithCategory: React.FC<Props> = ({
       : {};
 
     return (
-      <div key={`${el.filmId}`} className="gap-6 my-2 w-2/12">
+      <div key={`${el.filmId || el.kinopoiskId}`} className="gap-6 my-2 w-3/12">
         <div
           style={{ ...styleWithAnimation }}
           ref={(element) =>
             withAnimation ? createAnimation(element, i) : element
           }
         >
-          <Cart {...el} imgHeight={imgHeight} />
+          {imgHeight && (
+            <Cart
+              {...el}
+              filmId={el.filmId || el.kinopoiskId}
+              imgHeight={imgHeight}
+              rating={el.rating || el.ratingKinopoisk || 0}
+            />
+          )}{" "}
         </div>
       </div>
     );
   });
 
   return (
-    <section className="trending py-10">
+    <section className="trending py-10" ref={rootRef}>
       <div className="container mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-white">{categoryName}</h2>

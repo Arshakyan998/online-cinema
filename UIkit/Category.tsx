@@ -7,14 +7,21 @@ interface Props {
 }
 
 const Category: React.FC<Props> = ({ category }) => {
+
+  // display: flex
+  // ;
+  //     align-items: center;
+  //     align-content: center;
+  //     gap: 12px 16px;
+  //     flex-wrap: wrap;
   return (
-    <ul className="flex items-center content-center flex-wrap gap-4">
+    <ul className="flex items-center content-center flex-wrap gap-x-3 gap-y-4 ">
       {category.map((el) => {
         return (
           <li key={el}>
             <Link
-              href="typesscript:void(0)"
-              className="text-white text-sm font-normal   rounded-3xl border-black border border-solid px-6 py-20"
+              href="typescript:void(0)"
+              className="text-[#F8F8FF] text-center text-sm font-normal leading-[130%]  rounded-3xl border-border-color bg-[#1B1B1B] border border-solid py-1.5 px-5"
             >
               {el}
             </Link>

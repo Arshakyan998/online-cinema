@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     domains: [
       "encrypted-tbn0.gstatic.com",
       "kinopoiskapiunofficial.tech",
-      "p1.hiclipart.com",
+      "img.freepik.com",
     ],
   },
 };

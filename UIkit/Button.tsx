@@ -21,7 +21,7 @@ const Button: React.FC<Props> = ({
 
   return (
     <Component
-      className="cus-btn primary flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg text-center"
+      className="cus-btn primary flex items-center gap-2 bg-blue-500 text-white px-4 py-2 justify-center rounded-lg text-center"
       {...props}
     >
       <i className="far fa-play"></i> {text}

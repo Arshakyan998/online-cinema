@@ -24,41 +24,38 @@
   align-items: center;
 }
 
-.input-group input{
+.input-group input {
   width: 88%;
   border: none;
   background: transparent;
-  color: #9EA2A8;
+  color: #9ea2a8;
   font-size: 16px;
   font-weight: 400;
   line-height: 150%;
   font-family: "Open Sans", sans-serif;
 }
 
-
 .input-group button {
   margin-right: 20px;
   border: none;
   background: transparent;
-  color: #9EA2A8;
+  color: #9ea2a8;
   font-size: 24px;
   padding: 0;
   text-align: end;
   box-shadow: none;
-} 
+}
 
-
-.badge_position{
+.badge_position {
   position: absolute;
   right: 0;
   top: 2px;
-  display: inline-flex
-;
+  display: inline-flex;
   padding: 0px 3.5px;
   justify-content: center;
   align-items: center;
-  background: #58DDA3;
-  color: #1B1B1B;
+  background: #58dda3;
+  color: #1b1b1b;
   text-align: center;
   font-family: "Open Sans", sans-serif;
   font-size: 11px;
@@ -67,7 +64,9 @@
   border-radius: 50px;
 }
 
-
+* {
+  scroll-behavior: smooth;
+}
 body {
   color: var(--foreground);
   background: var(--background);

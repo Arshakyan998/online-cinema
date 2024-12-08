@@ -3,12 +3,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { filmsApi } from "./filmsQuery/api";
 import { genreApi } from "./genreQuery/api";
 import { filmApiGetById } from "./filmByIdQuery/api";
+import { saveGenres } from "./genreQuery/saveGeners";
 
 export const store = configureStore({
   reducer: {
     [filmsApi.reducerPath]: filmsApi.reducer,
     [genreApi.reducerPath]: genreApi.reducer,
     [filmApiGetById.reducerPath]: filmApiGetById.reducer,
+    [saveGenres.name]: saveGenres.reducer,
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware()

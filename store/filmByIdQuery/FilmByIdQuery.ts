@@ -1,6 +1,7 @@
+import { IData } from "../types";
 import { filmApiGetById } from "./api";
 import type { IActor } from "./type";
-export const getStaff = filmApiGetById.injectEndpoints({
+export const extendsFilmByQueryApi = filmApiGetById.injectEndpoints({
   endpoints: (builder) => ({
     getStaff: builder.query<Record<string, IActor[]>, { id: string }>({
       query: ({ id }) => ({
@@ -21,5 +22,31 @@ export const getStaff = filmApiGetById.injectEndpoints({
         }, {} as Record<string, IActor[]>);
       },
     }),
+
+    getSequelsAndPrequels: builder.query<
+      IData<"films">,
+      { filmId: string | number }
+    >({
+      query: ({ filmId }) => `/v2.1/films/${filmId}/sequels_and_prequels`,
+      transformResponse: (data: IData<"films">["films"]): IData<"films"> => {
+        return {
+          total: 0,
+          totalPages: 0,
+          films: data,
+        };
+      },
+    }),
+
+    getSimilarFilms: builder.query<IData<"films">, { filmId: string | number }>(
+      {
+        query: ({ filmId }) => `/v2.2/films/${filmId}/similars`,
+        transformResponse: (data: IData<"items">): IData<"films"> => {
+          return {
+            ...data,
+            films: data.items,
+          };
+        },
+      }
+    ),
   }),
 });

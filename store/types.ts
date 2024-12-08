@@ -29,4 +29,7 @@ export interface IFilms {
 
 export type IData<KeyType extends string> = {
   [K in KeyType]: IFilms[];
+} & {
+  total: number;
+  totalPages: number;
 };

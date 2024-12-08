@@ -1,10 +1,10 @@
 import { Metadata, ResolvingMetadata } from "next";
 import Posts from "./Posts";
-import { Container } from "@/components/Container";
-import { Content } from "@/components/mainPage/Content";
+ import { Content } from "@/components/mainPage/Content";
 import { Genres } from "@/components/mainPage/Geners";
-import SectionWithCategory from "@/components/mainPage/SectionWithCategory";
+import SectionWithCategory from "@/components/SectionWithCategory";
 import { SearchParams } from "./Types";
+import { Container } from "@/components";
 
 export async function generateMetadata(
   { params, searchParams }: SearchParams,

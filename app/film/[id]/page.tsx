@@ -5,7 +5,8 @@ import { filmApiGetById } from "@/store/filmByIdQuery/api";
 import { store } from "@/store/store";
 import Player from "@/components/filmIdPage/Player";
 import Description from "@/components/filmIdPage/Description";
-import { getStaff } from "@/store/filmByIdQuery/FilmByIdQuery";
+import { extendsFilmByQueryApi } from "@/store/filmByIdQuery/FilmByIdQuery";
+import { Loading } from "@/components";
 
 export async function generateMetadata(
   { params }: SearchParams,
@@ -42,16 +43,33 @@ const Film = async ({ params }: SearchParams) => {
   );
 
   const { data: Actors } = await store.dispatch(
-    getStaff.endpoints.getStaff.initiate({ id })
+    extendsFilmByQueryApi.endpoints.getStaff.initiate({ id })
   );
 
-  if (isLoading) return <div>Loading</div>;
+  const { data: PrequelsAndSequels } = await store.dispatch(
+    extendsFilmByQueryApi.endpoints.getSequelsAndPrequels.initiate({
+      filmId: id,
+    })
+  );
+
+  const { data: similarMovies, error: Z } = await store.dispatch(
+    extendsFilmByQueryApi.endpoints.getSimilarFilms.initiate({
+      filmId: id,
+    })
+  );
+
+  if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
 
   return (
     <div className="py-10">
       <Player id={data?.kinopoiskId || 0} url={data?.coverUrl || ""} />
-      <Description {...data} staff={Actors} />
+      <Description
+        {...data}
+        staff={Actors}
+        PrequelsAndSequels={PrequelsAndSequels}
+        similarMovies={similarMovies}
+      />
     </div>
   );
 };

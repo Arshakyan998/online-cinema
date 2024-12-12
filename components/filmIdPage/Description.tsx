@@ -78,7 +78,7 @@ const Description: React.FC<
           </div>
           <div className="flex gap-2">
             {[`${ratingAgeLimits?.slice(3)}+`, type, year, duration].map(el => (
-              <Tag> {el}</Tag>
+              <Tag key={el}> {el}</Tag>
             ))}
           </div>
           <h5 className="h-6 color-white mb-4 text-2xl"> Про фильм</h5>

@@ -1,11 +1,11 @@
 import { Metadata, NextApiHandler, ResolvingMetadata } from "next";
 import React from "react";
 import { SearchParams } from "../../Types";
-import { filmApiGetById } from "@/store/filmByIdQuery/api";
+import { filmApiGetById } from "@/store/filmBySymbolQuery/api";
 import { store } from "@/store/store";
 import Player from "@/components/filmIdPage/Player";
 import Description from "@/components/filmIdPage/Description";
-import { extendsFilmByQueryApi } from "@/store/filmByIdQuery/FilmByIdQuery";
+import { extendsFilmByQueryApi } from "@/store/filmBySymbolQuery/FilmByIdQuery";
 import { Loading } from "@/components";
 
 export async function generateMetadata(

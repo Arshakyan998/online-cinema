@@ -1,42 +1,41 @@
-import React from "react";
-import * as Icons from "lucide-react";
-import { Select } from "antd";
-import { BaseOptionType } from "antd/es/select";
+import { BaseOptionType } from 'antd/es/select';
+import * as Icons from 'lucide-react';
+import { Select } from 'antd';
+import React from 'react';
 interface Props {
-  onChange: (
-    e: never[],
-    option: BaseOptionType | BaseOptionType[] | undefined
-  ) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   defaultValue?: string;
   icon?: keyof typeof Icons;
-  data: BaseOptionType[];
+  placeholder?: string;
 }
 
 const Input: React.FC<Props> = ({
-  // defaultValue,
+  defaultValue,
   onChange,
-  //value,
+  value,
   icon,
-  data,
+  placeholder,
 }) => {
   const Icon = icon && Icons[icon];
+
+  const getValue = value || defaultValue;
+
   return (
     <div
       className="relative px-3 py-4 border-none rounded-xl flex items-center"
       style={{
-        background: "#212020",
+        background: '#212020',
       }}
     >
       <span>{Icon && <Icon />}</span>
-      {/* <input
-        className="w-[88%] border-none outline-none text-[#9EA2A8] text-xl  "
+      <input
+        className="w-full border-none outline-none text-medium-gray text-xl  bg-transparent"
         value={getValue}
-        style={{
-          background: "transparent",
-        }}
-      /> */}
-      <Select
+        onChange={onChange}
+        placeholder={placeholder}
+      />
+      {/* <Select
         className="w-[88%] border-none outline-none text-[#9EA2A8] text-xl  bg-transparent"
         mode="multiple"
         allowClear
@@ -55,7 +54,7 @@ const Input: React.FC<Props> = ({
         variant="filled"
         onChange={onChange}
         options={data}
-      />
+      /> */}
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import React from "react";
-import { Pagination as AntPagination } from "antd";
+import { Pagination as AntPagination } from 'antd';
+import React from 'react';
 
 interface Props {
   total: number;

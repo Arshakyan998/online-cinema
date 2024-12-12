@@ -1,23 +1,21 @@
-"use client";
+'use client';
 
-import React, { CSSProperties, useEffect } from "react";
-import { useTrendingMoviesQuery } from "@/store/filmsQuery/trendsMovieApi";
+import { useTrendingMoviesQuery } from '@/store/filmsQuery/trendsMovieApi';
+import React, { CSSProperties, useEffect } from 'react';
+import SlickSlider, { Settings } from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import { IData } from '@/store/types';
+import { useObserver } from '@/hooks';
+import { Skeleton } from 'antd';
+import Link from 'next/link';
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
-import SlickSlider, { Settings } from "react-slick";
-
-import { Skeleton } from "antd";
-import Cart from "./Cart";
-import Link from "next/link";
-import { useObserver } from "@/hooks";
-import { IData } from "@/store/types";
+import Cart from './Cart';
 
 const MOVIES_TYPES = {
-  trades: "TOP_100_POPULAR_FILMS",
-  bestAllTime: "TOP_250_BEST_FILMS",
-  awaitFilms: "TOP_AWAIT_FILMS",
+  trades: 'TOP_100_POPULAR_FILMS',
+  bestAllTime: 'TOP_250_BEST_FILMS',
+  awaitFilms: 'TOP_AWAIT_FILMS',
 } as const;
 
 interface Props {
@@ -25,14 +23,14 @@ interface Props {
   withAnimation?: boolean;
   categoryName: string;
   requestType?: keyof typeof MOVIES_TYPES;
-  externalData?: IData<"films">;
+  externalData?: IData<'films'>;
 }
 
 const SectionWithCategory: React.FC<Props> = ({
   sliderOn,
   withAnimation,
   categoryName,
-  requestType = "bestAllTime",
+  requestType = 'bestAllTime',
   externalData,
 }) => {
   const settings: Settings = {
@@ -54,8 +52,8 @@ const SectionWithCategory: React.FC<Props> = ({
       page: 1,
     },
     {
-      skip: !!externalData?.films?.length || !!externalData?.items?.length,
-    }
+      skip: !!externalData?.films?.length,
+    },
   );
 
   const data = externalData || moviesData;
@@ -69,7 +67,7 @@ const SectionWithCategory: React.FC<Props> = ({
 
   let delay = 1;
 
-  const createAnimation = (element: HTMLDivElement | null, index: number) => {
+  const createAnimation = (element: HTMLDivElement | null, i: number) => {
     if (!element || animatedElements.current.has(element)) return;
     animatedElements.current.set(element, element);
 
@@ -93,22 +91,22 @@ const SectionWithCategory: React.FC<Props> = ({
     const opacityKeyframes = new KeyframeEffect(
       element,
       [
-        { opacity: 0, transform: "translateY(20px)" },
-        { opacity: 1, transform: "translateY(0)" },
+        { opacity: 0, transform: 'translateY(20px)' },
+        { opacity: 1, transform: 'translateY(0)' },
       ],
       {
         duration: 500,
-        easing: "ease-out",
+        easing: 'ease-out',
         delay: delay * 200,
-        fill: "forwards",
-      }
+        fill: 'forwards',
+      },
     );
 
     const opacityAnimation = new Animation(opacityKeyframes, document.timeline);
 
-    opacityAnimation.addEventListener("finish", () => {
-      element.style.opacity = "1";
-      element.style.transform = "translateY(0)";
+    opacityAnimation.addEventListener('finish', () => {
+      element.style.opacity = '1';
+      element.style.transform = 'translateY(0)';
     });
     if (sliderOn) {
       opacityAnimation.play();
@@ -119,17 +117,17 @@ const SectionWithCategory: React.FC<Props> = ({
 
   useEffect(() => {
     if (data?.films) {
-      const imagePromises = data.films.map((el) => {
+      const imagePromises = data.films.map(el => {
         return new Promise<number>((resolve, reject) => {
           const img = new Image();
           img.src = el.posterUrlPreview;
 
           img.onload = () => resolve(img.height);
-          img.onerror = () => reject("Error loading image");
+          img.onerror = () => reject('Error loading image');
         });
       });
 
-      Promise.all(imagePromises).then((heights) => {
+      Promise.all(imagePromises).then(heights => {
         setImgHeight(Math.max(...heights));
       });
     }
@@ -141,14 +139,14 @@ const SectionWithCategory: React.FC<Props> = ({
 
   const content = data?.films.map((el, i) => {
     const styleWithAnimation: CSSProperties = withAnimation
-      ? { opacity: 0, transform: "translateY(20px)" }
+      ? { opacity: 0, transform: 'translateY(20px)' }
       : {};
 
     return (
       <div key={`${el.filmId || el.kinopoiskId}`} className="gap-6 my-2 w-3/12">
         <div
           style={{ ...styleWithAnimation }}
-          ref={(element) =>
+          ref={element =>
             withAnimation ? createAnimation(element, i) : element
           }
         >
@@ -157,9 +155,9 @@ const SectionWithCategory: React.FC<Props> = ({
               {...el}
               filmId={el.filmId || el.kinopoiskId}
               imgHeight={imgHeight}
-              rating={el.rating || el.ratingKinopoisk || 0}
+              rating={el.rating || el.ratingKinopoisk}
             />
-          )}{" "}
+          )}{' '}
         </div>
       </div>
     );
@@ -179,7 +177,7 @@ const SectionWithCategory: React.FC<Props> = ({
         </div>
         <div className="w-full">
           {sliderOn ? (
-            <SlickSlider {...settings} key={"main__page"}>
+            <SlickSlider {...settings} key={'main__page'}>
               {content}
             </SlickSlider>
           ) : (

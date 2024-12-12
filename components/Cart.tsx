@@ -1,9 +1,9 @@
-import Image from "next/image";
-import React from "react";
-import type { IFilms } from "@/store/types";
-import { Rate } from "antd";
-import Link from "next/link";
-import { Helper } from "@/utils/Helper";
+import type { IFilms } from '@/store/types';
+import Helper from '@/utils/Helper';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Rate } from 'antd';
+import React from 'react';
 
 interface Props extends IFilms {
   imgHeight: null | number;
@@ -16,20 +16,20 @@ const Cart: React.FC<Props> = ({
   genres,
   imgHeight,
   filmId,
-  rating=0,
+  rating = 0,
 }) => {
   return (
     <div className=" rounded-lg overflow-hidden  cursor-pointer  mx-2">
       <div className="relative mb-6  ">
         <Image
           src={posterUrlPreview}
-          alt={nameRu || ""}
+          alt={nameRu || ''}
           className="w-full   object-cover"
           height={500}
           loading="lazy"
           width={500}
           style={{
-            height: imgHeight || "100%",
+            height: imgHeight || '100%',
           }}
         />
         <Link
@@ -43,10 +43,12 @@ const Cart: React.FC<Props> = ({
         <div className="text-2xl font-bold text-white mb-2">{year}</div>
         <h4 className="text-lg text-white font-bold mb-1">{nameRu}</h4>
         <div className="text-2xl font-bold text-white mb-2">
-          {rating  && <Rate allowHalf disabled count={10} value={rating ? +rating : 1} /> }
+          {rating && (
+            <Rate allowHalf disabled count={10} value={rating ? +rating : 1} />
+          )}
         </div>
         <h6 className="text-sm text-gray-400">
-          {Helper.addVirgule(genres, "genre", "span")}
+          {Helper.addVirgule(genres, 'genre', 'span')}
         </h6>
       </div>
     </div>

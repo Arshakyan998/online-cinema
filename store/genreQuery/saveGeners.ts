@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { IGenre } from '@/app/GlobalTypes/Genre';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const saveGenres = createSlice({
-  name: "geners/data",
+  name: 'geners/data',
   initialState: {
     genres: [],
-  } as Record<string, []>,
+  } as Record<'genres', IGenre[]>,
   reducers: {
     saveGenres: (state, action) => {
       state.genres = action.payload;

@@ -1,17 +1,17 @@
-"use client";
-import Image from "next/image";
-import React, { useEffect } from "react";
+'use client';
+import Image from 'next/image';
+import React, { useEffect } from 'react';
 
 const Loading: React.FC = () => {
   useEffect(() => {
     function preloader() {
       setTimeout(() => {
-        const preloader = document.getElementById("preloader");
+        const preloader = document.getElementById('preloader');
         if (preloader) {
-          preloader.style.transition = "opacity 0.5s ease";
-          preloader.style.opacity = "0";
+          preloader.style.transition = 'opacity 0.5s ease';
+          preloader.style.opacity = '0';
           setTimeout(() => {
-            preloader.style.display = "none";
+            preloader.style.display = 'none';
           }, 500);
         }
       }, 2000);

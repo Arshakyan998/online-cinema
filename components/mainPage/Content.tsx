@@ -1,26 +1,25 @@
-import { filmsApi } from "@/store/filmsQuery/api";
-import { store } from "@/store/store";
-import Button from "@/UIkit/Button";
-import { Helper } from "@/utils/Helper";
-import { Clapperboard } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import Loading from "../Loading";
+import { filmsApi } from '@/store/filmsQuery/api';
+import { Clapperboard } from 'lucide-react';
+import { store } from '@/store/store';
+import Button from '@/UIkit/Button';
+import Helper from '@/utils/Helper';
+import Loading from '../Loading';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export const Content = async () => {
   const { error, data, isLoading } = await store.dispatch(
-    filmsApi.endpoints.getFilms.initiate(undefined)
+    filmsApi.endpoints.getFilms.initiate(undefined),
   );
 
   if (isLoading) return <Loading />;
 
   if (error) {
-    return <div>{"err"}</div>;
+    return <div>{'err'}</div>;
   }
   const [dataForMainPoster, ...other] = data!.items || [];
 
-  const lastKey = dataForMainPoster?.genres.length > 1 ? "ы" : "";
+  const lastKey = dataForMainPoster?.genres.length > 1 ? 'ы' : '';
 
   return (
     <div className="w-full py-10 hero-banner-1">
@@ -34,13 +33,7 @@ export const Content = async () => {
             >
               <div className="content border-box flex flex-col justify-between h-full">
                 <Clapperboard width={100} height={100} />
-                {/* <Image
-                  src="https://www.pngfind.com/pngs/m/214-2144432_transparent-movie-icon-hd-png-download.png"
-                  alt="Logo"
-                  className="logo mb-24 lg:mb-14 md:mb-10 sm:mb-7"
-                  width={55}
-                  height={55}
-                /> */}
+
                 <div className="h-fit">
                   <h2 className="text-4xl font-bold text-white mb-4 leading-tight">
                     {dataForMainPoster?.nameRu} <br />
@@ -60,11 +53,11 @@ export const Content = async () => {
                     </li>
                   </ul>
                   <p className="text-white mb-8">
-                    <strong className="text-gray-400">Жанр{lastKey} </strong>{" "}
+                    <strong className="text-gray-400">Жанр{lastKey} </strong>{' '}
                     {Helper.addVirgule(
                       dataForMainPoster?.genres,
-                      "genre",
-                      "span"
+                      'genre',
+                      'span',
                     )}
                   </p>
                   <div className="flex gap-4">
@@ -95,7 +88,7 @@ export const Content = async () => {
                     <div className="anime-sm-card p-5 rounded-xl bg-gray-800 flex items-start gap-5">
                       <Image
                         src={data?.posterUrlPreview}
-                        alt={data?.nameRu || ""}
+                        alt={data?.nameRu || ''}
                         className="w-1/3 rounded-lg h-auto max-w-full"
                         width={500}
                         height={500}

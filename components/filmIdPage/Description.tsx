@@ -1,20 +1,19 @@
-import type { IActor, IFilm } from "@/store/filmByIdQuery/type";
-import Category from "@/UIkit/Category";
-import Tags from "@/UIkit/Tags";
-import { Helper } from "@/utils/Helper";
-import { Rate } from "antd";
-import React from "react";
-import SectionWithCategory from "../SectionWithCategory";
-import { IData } from "@/store/types";
+import type { IActor, IFilm } from '@/store/filmBySymbolQuery/type';
+import SectionWithCategory from '../SectionWithCategory';
+import Category from '@/UIkit/Category';
+import { IData } from '@/store/types';
+import Helper from '@/utils/Helper';
+import { Tag } from '@/UIkit';
+import { Rate } from 'antd';
+import React from 'react';
 
 const Description: React.FC<
   IFilm & {
     staff: Record<string, IActor[]>;
-    PrequelsAndSequels?: IData<"films">;
-    similarMovies?: IData<"films">;
+    PrequelsAndSequels?: IData<'films'>;
+    similarMovies?: IData<'films'>;
   }
 > = ({
-  nameRu,
   ratingKinopoiskVoteCount,
   ratingKinopoisk,
   ratingImdb,
@@ -22,6 +21,7 @@ const Description: React.FC<
   countries,
   ratingAgeLimits,
   type,
+  nameRu,
   year,
   filmLength,
   lastSync,
@@ -39,19 +39,19 @@ const Description: React.FC<
 
   const infoAbout = [
     {
-      title: "Тип",
+      title: 'Тип',
       description: type,
     },
     {
-      title: "Дата выхода",
+      title: 'Дата выхода',
       description: new Date(lastSync).toLocaleDateString(),
     },
     {
-      title: "Страна",
-      description: countries.map((el) => el.country + " ").join(""),
+      title: 'Страна',
+      description: countries.map(el => el.country + ' ').join(''),
     },
     {
-      title: "Продолжительность",
+      title: 'Продолжительность',
       description: duration,
     },
   ];
@@ -76,10 +76,11 @@ const Description: React.FC<
               </span>
             </div>
           </div>
-          <Tags
-            tags={[`${ratingAgeLimits?.slice(3)}+`, type, year, duration]}
-          />
-
+          <div className="flex gap-2">
+            {[`${ratingAgeLimits?.slice(3)}+`, type, year, duration].map(el => (
+              <Tag> {el}</Tag>
+            ))}
+          </div>
           <h5 className="h-6 color-white mb-4 text-2xl"> Про фильм</h5>
           <p className="color-white mb-6 text-base max-w-3xl">{description}</p>
 
@@ -89,8 +90,8 @@ const Description: React.FC<
             return (
               <p className="color-white mb-6 text-base" key={el}>
                 <span className="color-medium-gray text-base font-semibold">
-                  {fullStaff[0]?.professionText}։{" "}
-                  {Helper.addVirgule(fullStaff, "nameRu", "span")}
+                  {fullStaff[0]?.professionText}։{' '}
+                  {Helper.addVirgule(fullStaff, 'nameRu', 'span')}
                 </span>
               </p>
             );
@@ -104,7 +105,7 @@ const Description: React.FC<
                 <p className="color-white mb-6 text-base" key={title}>
                   <span className="text-medium-gray  font-bold text-base  ">
                     {title} :
-                  </span>{" "}
+                  </span>{' '}
                   {description}
                 </p>
               );
@@ -112,7 +113,7 @@ const Description: React.FC<
 
             <div className="py-4 px-0 border-border-color border border-solid border-l-0 border-r-0 items-start gap-5 flex ">
               <p className="text-medium-gray text-lg mb-6 font-bold ">Genre:</p>
-              <Category category={genres.map((el) => el.genre)} />
+              <Category category={genres.map(el => el.genre)} />
             </div>
           </div>
         </div>

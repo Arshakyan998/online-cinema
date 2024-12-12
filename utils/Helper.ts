@@ -1,23 +1,23 @@
-import React, { ReactHTML } from "react";
+import React, { ReactHTML } from 'react';
 
-export class Helper {
+class Helper {
   static addVirgule = <T extends object | string>(
     arr: T[],
     key: keyof T,
-    tag: keyof ReactHTML = "span",
-    className?: string
+    tag: keyof ReactHTML = 'span',
+    className?: string,
   ) => {
     return arr?.map((el, i) => {
-      const content = (typeof el === "object" ? el[key] : el) as string;
+      const content = (typeof el === 'object' ? el[key] : el) as string;
 
       if (!content) return null;
       const contentWithVirgule =
-        content + "" + (i === arr.length - 1 ? " " : ", ");
+        content + '' + (i === arr.length - 1 ? ' ' : ', ');
 
       return React.createElement(
         tag,
         { className, key: content },
-        contentWithVirgule
+        contentWithVirgule,
       );
     });
   };
@@ -32,3 +32,4 @@ export class Helper {
     return new Array(total / pageCount).map((_, i) => i + 1);
   };
 }
+export default Helper;

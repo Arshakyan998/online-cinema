@@ -13,7 +13,7 @@ export async function generateMetadata(
 
     description: "Поиск вашего любимого филтма",
   };
-}
+} 
 
 const SearchPage: NextPage<SearchParams> = () => {
   return <SearchPageContent />;

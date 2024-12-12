@@ -23,11 +23,11 @@ export interface IFilms {
   ratingAgeLimits: string;
   year: number;
   description: string;
-  rating?: string;
+  rating?: string | number;
   filmId?: number;
 }
 
-export type IData<KeyType extends string> = {
+export type IData<KeyType extends 'items' | 'films'> = {
   [K in KeyType]: IFilms[];
 } & {
   total: number;

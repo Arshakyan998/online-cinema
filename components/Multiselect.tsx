@@ -1,7 +1,5 @@
-import React from "react";
-
 const Multiselect = () => {
-  const example = ["data", "zzz", "xxx"];
+  const example = ['data', 'zzz', 'xxx'];
 
   return <div>Multiselect</div>;
 };

@@ -1,18 +1,16 @@
 import baseQuery from "../baseQuery";
-import { HYDRATE } from "next-redux-wrapper";
-import { createApi } from "@reduxjs/toolkit/query/react";
+ import { createApi } from "@reduxjs/toolkit/query/react";
+import { IGenre } from "@/app/GlobalTypes/Genre";
 
 export const genreApi = createApi({
   reducerPath: "getGenres",
   baseQuery,
 
   endpoints: (builder) => ({
-    getGenres: builder.query<Array<{ genre: string; id: number }>, undefined>({
+    getGenres: builder.query<IGenre[], undefined>({
       query: () => "v2.2/films/filters",
 
-      transformResponse: (data: {
-        genres: Array<{ genre: string; id: number }>;
-      }): Array<{ genre: string; id: number }> => {
+      transformResponse: (data: { genres: IGenre[] }): IGenre[] => {
         return data.genres;
       },
     }),

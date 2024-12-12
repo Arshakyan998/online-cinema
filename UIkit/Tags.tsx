@@ -1,18 +1,33 @@
-import React from "react";
+import { EyeClosedIcon, X } from 'lucide-react';
+import React from 'react';
 
-interface Props {
-  tags: Array<string | number>;
+interface Props extends React.PropsWithChildren {
+  onClick?: (e: React.PointerEvent<HTMLButtonElement>) => void;
+  isClosable?: boolean;
+  onClose?: () => void;
+  disabled?: boolean;
 }
 
-const Tags: React.FC<Props> = ({ tags }) => {
+const Tag: React.FC<Props> = ({
+  children,
+  onClick,
+  isClosable,
+  onClose,
+  disabled = false,
+}) => {
   return (
-    <ul className="flex items-center gap-3 text-sm font-semibold text-white mb-4">
-      {tags.map((el) => (
-        <li className="border border-white px-2 py-1 rounded-md" key={el}>
-          {el}
-        </li>
-      ))}
-    </ul>
+    <button
+      className="flex items-center gap-3 text-sm font-semibold text-white mb-4 disabled:text-disable"
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <span className="border flex items-center justify-center border-white px-2 py-1 rounded-md disabled:border-disable">
+        {children}{' '}
+        {isClosable && (
+          <X width={15} className="ml-2" onClick={() => onClose?.()} />
+        )}
+      </span>
+    </button>
   );
 };
-export default Tags;
+export default Tag;

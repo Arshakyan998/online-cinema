@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { filmsApi } from "./filmsQuery/api";
 import { genreApi } from "./genreQuery/api";
-import { filmApiGetById } from "./filmByIdQuery/api";
+import { filmApiGetById } from "./filmBySymbolQuery/api";
 import { saveGenres } from "./genreQuery/saveGeners";
 
 export const store = configureStore({

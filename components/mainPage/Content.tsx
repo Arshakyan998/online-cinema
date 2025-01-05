@@ -1,17 +1,23 @@
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { SerializedError } from '@reduxjs/toolkit';
 import { filmsApi } from '@/store/filmsQuery/api';
 import { Clapperboard } from 'lucide-react';
 import { store } from '@/store/store';
+import { IData } from '@/store/types';
 import Button from '@/UIkit/Button';
 import Helper from '@/utils/Helper';
 import Loading from '../Loading';
+import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export const Content = async () => {
-  const { error, data, isLoading } = await store.dispatch(
-    filmsApi.endpoints.getFilms.initiate(undefined),
-  );
+interface Props {
+  data?: IData<'items'>;
+  error?: FetchBaseQueryError | SerializedError;
+  isLoading: boolean;
+}
 
+export const Content: NextPage<Props> = ({ isLoading, error, data }) => {
   if (isLoading) return <Loading />;
 
   if (error) {
@@ -106,7 +112,7 @@ export const Content = async () => {
                           <li>{data?.type}</li>
                         </ul>
                         <p className="text-sm text-gray-500 mb-8">
-                          {data?.description.slice(0, 150)}...
+                          {data?.description?.slice(0, 150)}...
                         </p>
                         <Button isLink href={`/film/${data.kinopoiskId}`} />
                       </div>

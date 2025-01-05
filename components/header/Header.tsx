@@ -2,10 +2,13 @@
 
 import Link from 'next/link';
 
+import { useCreateUserMutation } from '@/store/auth/api';
+import userSlice from '@/store/auth/userSlice';
+import { useAppDispatch } from '@/hooks';
+import React, { useEffect } from 'react';
 import SearchModal from './SearchModal';
 import Container from '../Container';
 import { Button } from '@/UIkit';
-import React from 'react';
 
 export const Header = () => {
   const [showModal, setShowModal] = React.useState(false);
@@ -26,8 +29,6 @@ export const Header = () => {
   ];
 
   const modalControllerHandler = (isOpen: boolean = true) => {
-    console.log(isOpen);
-
     setShowModal(isOpen);
   };
 
@@ -93,7 +94,7 @@ export const Header = () => {
             </ul>
           </div>
         </Container>
-      </header>{' '}
+      </header>
       {showModal && <SearchModal closeFunction={modalControllerHandler} />}
     </>
   );

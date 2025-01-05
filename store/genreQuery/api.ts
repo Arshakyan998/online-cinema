@@ -1,6 +1,6 @@
 import baseQuery from "../baseQuery";
  import { createApi } from "@reduxjs/toolkit/query/react";
-import { IGenre } from "@/app/GlobalTypes/Genre";
+import { IGenre } from "@/GlobalTypes/Genre";
 
 export const genreApi = createApi({
   reducerPath: "getGenres",

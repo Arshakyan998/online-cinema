@@ -17,7 +17,14 @@ const MOVIES_TYPES = {
   bestAllTime: 'TOP_250_BEST_FILMS',
   awaitFilms: 'TOP_AWAIT_FILMS',
 } as const;
-
+const settings: Settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 2,
+  arrows: false,
+};
 interface Props {
   sliderOn?: boolean;
   withAnimation?: boolean;
@@ -33,15 +40,6 @@ const SectionWithCategory: React.FC<Props> = ({
   requestType = 'bestAllTime',
   externalData,
 }) => {
-  const settings: Settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 2,
-    arrows: false,
-  };
-
   const {
     data: moviesData,
     error,
@@ -114,7 +112,7 @@ const SectionWithCategory: React.FC<Props> = ({
     }
     observer(() => opacityAnimation.play()).observe(element);
   };
-
+ 
   useEffect(() => {
     if (data?.films) {
       const imagePromises = data.films.map(el => {

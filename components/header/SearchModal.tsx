@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { saveGenres } from '@/store/genreQuery/saveGeners';
 import { useGetGenresQuery } from '@/store/genreQuery/api';
-import { IGenre } from '@/app/GlobalTypes/Genre';
+import { IGenre } from '@/GlobalTypes/Genre';
 import { Button, Input, Tag } from '@/UIkit';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from '@/hooks';

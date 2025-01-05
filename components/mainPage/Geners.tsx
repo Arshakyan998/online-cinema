@@ -1,7 +1,7 @@
-"use client";
-import { useGetGenresQuery } from "@/store/genreQuery/api";
-import Link from "next/link";
-import React from "react";
+'use client';
+import { useGetGenresQuery } from '@/store/genreQuery/api';
+import Link from 'next/link';
+import React from 'react';
 
 export const Genres = () => {
   const { data, isLoading, error } = useGetGenresQuery(undefined);
@@ -13,7 +13,7 @@ export const Genres = () => {
     <section className="categories py-10">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-          {Object.keys(data!).map((el) => {
+          {Object.keys(data!).map(el => {
             return (
               el && (
                 <div className="mb-6" key={el}>

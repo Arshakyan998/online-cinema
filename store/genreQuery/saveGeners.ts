@@ -1,4 +1,4 @@
-import { IGenre } from '@/app/GlobalTypes/Genre';
+import { IGenre } from '@/GlobalTypes/Genre';
 import { createSlice } from '@reduxjs/toolkit';
 
 export const saveGenres = createSlice({

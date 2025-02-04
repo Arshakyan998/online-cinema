@@ -1,5 +1,5 @@
 import baseQuery from "../baseQuery";
-import { extractRehydrationInfo } from "../Hydrate";
+import { extractRehydrationInfo } from "../hydrate";
 
 import { IData } from "../types";
 import { createApi } from "@reduxjs/toolkit/query/react";

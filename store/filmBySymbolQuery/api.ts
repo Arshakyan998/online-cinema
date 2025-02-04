@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { extractRehydrationInfo } from '../Hydrate';
+import { extractRehydrationInfo } from '../hydrate';
 
 import baseQuery from '../baseQuery';
 import { IFilm } from './type';

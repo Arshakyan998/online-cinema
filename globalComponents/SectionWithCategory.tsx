@@ -5,11 +5,12 @@ import React, { CSSProperties, useEffect } from 'react';
 import SlickSlider, { Settings } from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import { Skeleton, Space } from 'antd';
 import { IData } from '@/store/types';
 import { useObserver } from '@/hooks';
-import { Skeleton } from 'antd';
 import Link from 'next/link';
 
+import { Heart } from 'lucide-react';
 import Cart from './Cart';
 
 const MOVIES_TYPES = {
@@ -31,6 +32,8 @@ interface Props {
   categoryName: string;
   requestType?: keyof typeof MOVIES_TYPES;
   externalData?: IData<'films'>;
+  action?: () => void;
+  actionButtonTitle?: string;
 }
 
 const SectionWithCategory: React.FC<Props> = ({
@@ -39,6 +42,8 @@ const SectionWithCategory: React.FC<Props> = ({
   categoryName,
   requestType = 'bestAllTime',
   externalData,
+  action,
+  actionButtonTitle,
 }) => {
   const {
     data: moviesData,
@@ -112,7 +117,7 @@ const SectionWithCategory: React.FC<Props> = ({
     }
     observer(() => opacityAnimation.play()).observe(element);
   };
- 
+
   useEffect(() => {
     if (data?.films) {
       const imagePromises = data.films.map(el => {
@@ -133,9 +138,13 @@ const SectionWithCategory: React.FC<Props> = ({
 
   if (error) return <div>error</div>;
   if (isLoading)
-    return <Skeleton className="w-3/12" active paragraph={{ rows: 0 }} />;
+    return (
+      <Space>
+        <Skeleton.Node active style={{ width: 160 }} />
+      </Space>
+    );
 
-  const content = data?.films.map((el, i) => {
+  const content = data?.films?.map((el, i) => {
     const styleWithAnimation: CSSProperties = withAnimation
       ? { opacity: 0, transform: 'translateY(20px)' }
       : {};
@@ -155,7 +164,7 @@ const SectionWithCategory: React.FC<Props> = ({
               imgHeight={imgHeight}
               rating={el.rating || el.ratingKinopoisk}
             />
-          )}{' '}
+          )}
         </div>
       </div>
     );
@@ -166,12 +175,14 @@ const SectionWithCategory: React.FC<Props> = ({
       <div className="container mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-white">{categoryName}</h2>
-          <Link
-            href="/trends"
-            className="text-sm text-white bg-primary px-4 py-2 rounded-md hover:bg-primary-dark transition"
-          >
-            View All <i className="fas fa-chevron-right ml-2"></i>
-          </Link>
+          {actionButtonTitle && action && (
+            <Link
+              href="/trends"
+              className="text-sm text-white bg-primary px-4 py-2 rounded-md hover:bg-primary-dark transition"
+            >
+              {actionButtonTitle}
+            </Link>
+          )}
         </div>
         <div className="w-full">
           {sliderOn ? (

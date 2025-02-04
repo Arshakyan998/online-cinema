@@ -1,8 +1,8 @@
-import SectionWithCategory from '@/components/SectionWithCategory';
+import SectionWithCategory from '@/globalComponents/SectionWithCategory';
 import { Content } from '@/components/mainPage/Content';
 import { Metadata, ResolvingMetadata } from 'next';
+import { Container } from '@/globalComponents';
 import filmsApi from '@/store/filmsQuery/api';
-import { Container } from '@/components';
 import { SearchParams } from './Types';
 import { store } from '@/store/store';
 
@@ -47,6 +47,7 @@ export default async function Home() {
         categoryName="Лучше за все время"
         withAnimation
         requestType="bestAllTime"
+        
       />
     </Container>
   );

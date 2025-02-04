@@ -1,7 +1,10 @@
 import StoreProvider from '@/Providers/ReduxProvider';
 import { Header } from '@/components/header/Header';
+import loginApi from '@/store/auth/loginApi';
 import localFont from 'next/font/local';
+import { cookies } from 'next/headers';
 import { store } from '@/store/store';
+import { InitiateUser } from '@/HOC';
 import type { Metadata } from 'next';
 import Inspect from './Inspect';
 import './globals.css';
@@ -30,15 +33,18 @@ export default function RootLayout({
 }>) {
   const showHeader = store.getState()['header/data'].visibility;
 
+
   return (
     <html lang="en">
       <StoreProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Inspect />
-          {showHeader && <Header />}
-          {children}
+          <InitiateUser>
+            <Inspect />
+            {showHeader && <Header />}
+            {children}
+          </InitiateUser>
         </body>
       </StoreProvider>
     </html>

@@ -1,12 +1,12 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { filmsApi } from '@/store/filmsQuery/api';
+import {Loading} from '../../globalComponents';
 import { Clapperboard } from 'lucide-react';
 import { store } from '@/store/store';
 import { IData } from '@/store/types';
 import Button from '@/UIkit/Button';
 import Helper from '@/utils/Helper';
-import Loading from '../Loading';
 import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -67,10 +67,7 @@ export const Content: NextPage<Props> = ({ isLoading, error, data }) => {
                     )}
                   </p>
                   <div className="flex gap-4">
-                    <Button
-                      isLink
-                      href={`/film/${dataForMainPoster.kinopoiskId}`}
-                    />
+                    <Button href={`/film/${dataForMainPoster.kinopoiskId}`} />
 
                     <Link
                       href="#"
@@ -114,7 +111,7 @@ export const Content: NextPage<Props> = ({ isLoading, error, data }) => {
                         <p className="text-sm text-gray-500 mb-8">
                           {data?.description?.slice(0, 150)}...
                         </p>
-                        <Button isLink href={`/film/${data.kinopoiskId}`} />
+                        <Button href={`/film/${data.kinopoiskId}`} />
                       </div>
                     </div>
                   </div>

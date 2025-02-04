@@ -1,26 +1,26 @@
-'use client';
+import React, { PropsWithChildren, ReactNode } from 'react';
 import { ClassNameValue } from 'tailwind-merge';
 import cn from '@/utils/clsx';
 import Link from 'next/link';
-import React from 'react';
 
-interface Props extends React.PropsWithChildren {
+interface Props extends PropsWithChildren<Partial<HTMLButtonElement>> {
   onClick?: (e: React.PointerEvent<HTMLButtonElement>) => void;
-  isLink?: boolean;
   href?: string;
   className?: ClassNameValue;
+  Icon?: ReactNode;
 }
 
 const Button: React.FC<Props> = ({
   onClick,
-  isLink = false,
   href,
   children = 'Смотерть',
   className,
+  Icon,
+  ...props
 }) => {
-  const Component = isLink ? Link : 'button';
+  const Component = href ? Link : 'button';
 
-  const props = isLink ? { href } : { onClick };
+  const typeProps = href ? { href } : { onClick };
 
   return (
     <Component
@@ -29,8 +29,9 @@ const Button: React.FC<Props> = ({
         className,
       )}
       {...props}
+      {...typeProps}
     >
-      <i className="far fa-play"></i> {children}
+      {Icon || Icon} {children}
     </Component>
   );
 };

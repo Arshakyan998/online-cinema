@@ -1,5 +1,4 @@
-export { default as Container } from './Container';
-export { default as SectionWithCategory } from './SectionWithCategory';
-export { default as SearchPageContent } from './searchPage/SearchPageContent';
-export { default as Loading } from './Loading';
+export { default as Search } from './searchPage/Search';
 export { default as SignIn } from './loginPage/SignIn';
+export { default as SignUp } from './loginPage/Signup';
+export { default as Favorites } from './favoritesPage/Favorites';

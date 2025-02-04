@@ -1,14 +1,14 @@
 'use client';
-import { useLazyGetFilmByNameQuery } from '@/store/filmBySymbolQuery/FilmByKeyword';
+import { useLazyGetFilmByNameQuery } from '@/store/filmBySymbolQuery/filmByKeyword';
 import { useLazyGetByGenreQuery } from '@/store/filmsQuery/trendsMovieApi';
-import SectionWithCategory from '../SectionWithCategory';
+import SectionWithCategory from '../../globalComponents/SectionWithCategory';
 import { useSearchParams } from 'next/navigation';
 import { useAppSelector } from '@/hooks';
 import React, { useEffect } from 'react';
-import Pagination from '../Pagination';
-import Loading from '../Loading';
+import Pagination from '../../globalComponents/Pagination';
+import Loading from '../../globalComponents/Loading';
 
-const SearchPageContent = () => {
+const Search = () => {
   const searchParams = useSearchParams();
   const [fetchData, { data: DataByGenres, isLoading, error }] =
     useLazyGetByGenreQuery();
@@ -73,4 +73,4 @@ const SearchPageContent = () => {
   );
 };
 
-export default SearchPageContent;
+export default Search;

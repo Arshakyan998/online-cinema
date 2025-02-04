@@ -7,11 +7,18 @@ export interface User {
   id: string;
   name: string;
   password: string;
-  username: string;
+  fullName: string;
   email: string;
   createAt: Date;
   updateAt: Date;
   avatarUrl: null | string;
   hashRt: never;
   tokens: Tokens;
+}
+
+export type EditUser = Pick<User, 'name' | 'fullName' | 'password'>;
+
+export interface SuccessUpdate {
+  status: number;
+  message: string;
 }

@@ -2,11 +2,11 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { saveGenres } from '@/store/genreQuery/saveGeners';
 import { useGetGenresQuery } from '@/store/genreQuery/api';
+import Loading from '../../globalComponents/Loading';
 import { IGenre } from '@/GlobalTypes/Genre';
 import { Button, Input, Tag } from '@/UIkit';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from '@/hooks';
-import Loading from '../Loading';
 import React from 'react';
 
 interface Props {

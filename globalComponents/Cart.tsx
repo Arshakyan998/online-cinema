@@ -1,4 +1,5 @@
 import type { IFilms } from '@/store/types';
+import { Heart } from 'lucide-react';
 import Helper from '@/utils/Helper';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +17,7 @@ const Cart: React.FC<Props> = ({
   genres,
   imgHeight,
   filmId,
-  rating = 0,
+  rating,
 }) => {
   return (
     <div className=" rounded-lg overflow-hidden  cursor-pointer  mx-2">
@@ -32,9 +33,10 @@ const Cart: React.FC<Props> = ({
             height: imgHeight || '100%',
           }}
         />
+        {/* <Heart className="absolute top-1.5 right-1" /> */}
         <Link
           href={`/film/${filmId}`}
-          className="absolute bottom-4 left-4 bg-white text-black text-sm px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-200 transition"
+          className="absolute  bottom-4 left-4 bg-white text-black text-sm px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-200 transition"
         >
           Смотреть сейчас<i className="fas fa-play"></i>
         </Link>

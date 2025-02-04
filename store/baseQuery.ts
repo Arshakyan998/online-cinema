@@ -1,11 +1,19 @@
 import { BaseQueryApi, fetchBaseQuery } from '@reduxjs/toolkit/query';
+import { getCookie } from 'cookies-next/client';
+import { saveUser } from './user/userSlice';
+import Helper from '@/utils/Helper';
+const getLoginApi = () => import('./auth/loginApi').then(data => data.default);
 
 const baseQueryWithAuth = (baseUrl: string) =>
   fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers: Headers) => {
-      headers.set('Content-Type', 'application/json');
       headers.set('X-API-KEY', process.env.NEXT_PUBLIC_API_KEY || '');
+
+      if (!headers.has('authorization')) {
+        headers.set('authorization', `Bearer ${getCookie('access_token')}`);
+      }
+
       return headers;
     },
   });
@@ -13,7 +21,7 @@ const baseQueryWithAuth = (baseUrl: string) =>
 export const baseQuery = async (
   args: any,
   api: BaseQueryApi,
-  extraOptions: any,
+  extraOptions: {},
   auth: boolean = false,
 ) => {
   const baseUrl = auth
@@ -25,25 +33,27 @@ export const baseQuery = async (
   let result = await baseAuthQuery(args, api, extraOptions);
 
   if (result.error && result.error.status === 401) {
-    const refreshResult = await baseAuthQuery(
-      {
-        url: '/auth/refresh',
-        method: 'POST',
-        body: { refreshToken: api.getState().auth.refreshToken },
-      },
-      api,
-      extraOptions,
-    );
+    const refresh_token = getCookie('refresh_token');
 
-    if (refreshResult.data) {
-      // api.dispatch(refreshToken(refreshResult.data));
-      result = await baseAuthQuery(args, api, extraOptions);
-    } else {
-      // api.dispatch(logout());
-      if (typeof window === 'undefined') {
-        return { error: { status: 401, data: 'Unauthorized' } };
+    if (refresh_token) {
+      const loginApi = await getLoginApi();
+      const tokens = await api
+        .dispatch(loginApi.endpoints.refreshTokens.initiate(refresh_token))
+        .unwrap();
+
+      if (tokens) {
+        const user = await api
+          .dispatch(loginApi.endpoints.getUser.initiate(tokens.access_token))
+          .unwrap();
+        Helper.updateTokens(tokens);
+        api.dispatch(saveUser(user));
       } else {
-        window.location.href = '/login';
+        // api.dispatch(logout());
+        if (typeof window === 'undefined') {
+          return { error: { status: 401, data: 'Unauthorized' } };
+        } else {
+          window.location.href = '/login';
+        }
       }
     }
   }

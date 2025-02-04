@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
 import CustomBaseQuery from '../baseQuery';
-import { User } from './types';
+import { User } from '@/GlobalTypes/User';
 const Auth = createApi({
   baseQuery: (...args) => CustomBaseQuery(...args, true),
   reducerPath: 'auth/users',

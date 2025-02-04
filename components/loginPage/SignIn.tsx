@@ -1,9 +1,13 @@
 'use client';
 
+import userSlice, { saveUser } from '@/store/user/userSlice';
 import { useCreateUserMutation } from '@/store/auth/api';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
-import userSlice from '@/store/auth/userSlice';
+import { setCookie } from 'cookies-next/client';
+import { useRouter } from 'next/navigation';
+import { User } from '@/store/auth/types';
 import { useAppDispatch } from '@/hooks';
+import Helper from '@/utils/Helper';
 import { Button } from '@/UIkit';
 import React from 'react';
 
@@ -13,7 +17,7 @@ const SignIn: React.FC = () => {
   );
   const [trigger, { error }] = useCreateUserMutation({});
   const dispatch = useAppDispatch();
-
+  const navigate = useRouter();
   if (error) {
     console.log(error);
   }
@@ -23,12 +27,11 @@ const SignIn: React.FC = () => {
   };
 
   const createUser: React.FormEventHandler<HTMLFormElement> = async e => {
-    await e.preventDefault();
+    e.preventDefault();
     const createdUser = await trigger(userData).unwrap();
-
-    console.log(createdUser);
-
-    dispatch(userSlice.actions.saveUser(createdUser));
+    if (createdUser) {
+      Helper.updateTokens(createdUser.tokens);
+    }
   };
 
   return (
@@ -83,7 +86,7 @@ const SignIn: React.FC = () => {
                   name="email"
                   className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                   onChange={e =>
-                    setDataFormUser('email', e.currentTarget.value)
+                    setDataFormUser('email', e.currentTarget.value.trim())
                   }
                 />
               </div>
@@ -102,7 +105,7 @@ const SignIn: React.FC = () => {
                   name="password"
                   className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                   onChange={e =>
-                    setDataFormUser('password', e.currentTarget.value)
+                    setDataFormUser('password', e.currentTarget.value.trim())
                   }
                 />
               </div>

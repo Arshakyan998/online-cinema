@@ -2,35 +2,54 @@
 
 import Link from 'next/link';
 
+import LinkWithUserId from '@/globalComponents/LinkWithId';
+import Container from '../../globalComponents/Container';
 import { useCreateUserMutation } from '@/store/auth/api';
-import userSlice from '@/store/auth/userSlice';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { Avatar, Dropdown, MenuProps } from 'antd';
+import userSlice from '@/store/user/userSlice';
+import { Settings, Heart } from 'lucide-react';
 import React, { useEffect } from 'react';
 import SearchModal from './SearchModal';
-import Container from '../Container';
 import { Button } from '@/UIkit';
+const routes = [
+  {
+    title: 'Home',
+    route: '/',
+  },
+  {
+    title: 'Listing',
+    route: '/listig',
+  },
+  {
+    title: 'Detail',
+    route: '/detail',
+  },
+];
+
+const menuItems: MenuProps['items'] = [
+  {
+    key: 1,
+    label: <Link href={'/user/settings'}>Настрйки</Link>,
+    icon: <Settings />,
+  },
+  {
+    key: 2,
+    label: <LinkWithUserId href={'/favorites'}>Выбранные</LinkWithUserId>,
+
+    icon: <Heart />,
+  },
+];
 
 export const Header = () => {
   const [showModal, setShowModal] = React.useState(false);
 
-  const routes = [
-    {
-      title: 'Home',
-      route: '/',
-    },
-    {
-      title: 'Listing',
-      route: '/listig',
-    },
-    {
-      title: 'Detail',
-      route: '/detail',
-    },
-  ];
-
   const modalControllerHandler = (isOpen: boolean = true) => {
     setShowModal(isOpen);
   };
+
+  const user = useAppSelector(state => state['user/data'].user);
+
 
   return (
     <>
@@ -73,7 +92,9 @@ export const Header = () => {
                     className={'animate-pulse'}
                     onClick={() => modalControllerHandler()}
                   >
+
                     Открть филитр
+
                   </Button>
                 </div>
               </div>
@@ -81,14 +102,25 @@ export const Header = () => {
 
             <ul className="flex items-center gap-5">
               <li>
-                <Link
-                  href={'javascript:void(0)'}
-                  className="p-3 rounded-3 border-solid border-2 border-[#212020]"
-                >
-                  <div className="relative">
-                    <span className="badge_position">4</span>
-                  </div>
-                </Link>
+                {user.id ? (
+                  <>
+                    <Dropdown menu={{ items: menuItems }}>
+                      <Avatar
+                        className="cursor-pointer"
+                        alt={user.name}
+                        src={user.avatarUrl}
+                        size={50}
+                      >
+                        {user.name[0].toUpperCase()}
+                      </Avatar>
+                    </Dropdown>
+                    <div className="relative">
+                      <span className="badge_position">4</span>
+                    </div>
+                  </>
+                ) : (
+                  <Button href="/auth/signup">Вход</Button>
+                )}
               </li>
               <li></li>
             </ul>

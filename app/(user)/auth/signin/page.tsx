@@ -1,11 +1,9 @@
 import headerSlice from '@/store/header/headerSice';
-import { NextPage, ResolvingMetadata } from 'next';
-import { SearchParams } from '../Types';
 import { store } from '@/store/store';
-import { Button } from '@/UIkit';
+import { SignIn } from '@/components';
+import { NextPage } from 'next';
 import { Metadata } from 'next';
 import React from 'react';
-import { SignIn } from '@/components';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -207,7 +205,7 @@ const Page: NextPage = () => {
           </form>
         </div>
       </div> */}
-      <SignIn/>
+      <SignIn />
     </>
   );
 };

@@ -1,25 +1,25 @@
-import { Metadata, NextApiHandler, ResolvingMetadata } from "next";
-import React from "react";
-import { SearchParams } from "../../Types";
-import { filmApiGetById } from "@/store/filmBySymbolQuery/api";
-import { store } from "@/store/store";
-import Player from "@/components/filmIdPage/Player";
-import Description from "@/components/filmIdPage/Description";
-import { extendsFilmByQueryApi } from "@/store/filmBySymbolQuery/FilmByIdQuery";
-import { Loading } from "@/components";
+import { extendsFilmByQueryApi } from '@/store/filmBySymbolQuery/filmByIdQuery';
+import { Metadata, NextApiHandler, ResolvingMetadata } from 'next';
+import { filmApiGetById } from '@/store/filmBySymbolQuery/api';
+import Description from '@/components/filmIdPage/Description';
+import Player from '@/components/filmIdPage/Player';
+import { Loading } from '@/globalComponents';
+import { SearchParams } from '../../Types';
+import { store } from '@/store/store';
+import React from 'react';
 
 export async function generateMetadata(
   { params }: SearchParams,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   // read route params
   const id = (await params).id;
 
   const { data } = await store.dispatch(
-    filmApiGetById.endpoints.getFilmBydId.initiate({ id })
+    filmApiGetById.endpoints.getFilmBydId.initiate({ id }),
   );
 
-  const previousImages = (await parent).title?.absolute || "";
+  const previousImages = (await parent).title?.absolute || '';
 
   return {
     title: `${previousImages} | ${data?.nameRu || data?.nameOriginal}`,
@@ -39,23 +39,23 @@ const Film = async ({ params }: SearchParams) => {
   const id = (await params).id;
 
   const { data, isLoading, error } = await store.dispatch(
-    filmApiGetById.endpoints.getFilmBydId.initiate({ id })
+    filmApiGetById.endpoints.getFilmBydId.initiate({ id }),
   );
 
   const { data: Actors } = await store.dispatch(
-    extendsFilmByQueryApi.endpoints.getStaff.initiate({ id })
+    extendsFilmByQueryApi.endpoints.getStaff.initiate({ id }),
   );
 
   const { data: PrequelsAndSequels } = await store.dispatch(
     extendsFilmByQueryApi.endpoints.getSequelsAndPrequels.initiate({
       filmId: id,
-    })
+    }),
   );
 
   const { data: similarMovies, error: Z } = await store.dispatch(
     extendsFilmByQueryApi.endpoints.getSimilarFilms.initiate({
       filmId: id,
-    })
+    }),
   );
 
   if (isLoading) return <Loading />;
@@ -63,10 +63,10 @@ const Film = async ({ params }: SearchParams) => {
 
   return (
     <div className="py-10">
-      <Player id={data?.kinopoiskId || 0} url={data?.coverUrl || ""} />
+      <Player id={data?.kinopoiskId || 0} url={data?.coverUrl || ''} />
       <Description
         {...data}
-        staff={Actors}
+        staff={Actors || {}}
         PrequelsAndSequels={PrequelsAndSequels}
         similarMovies={similarMovies}
       />

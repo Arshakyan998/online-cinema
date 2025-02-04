@@ -1,5 +1,5 @@
+import SectionWithCategory from '../../globalComponents/SectionWithCategory';
 import type { IActor, IFilm } from '@/store/filmBySymbolQuery/type';
-import SectionWithCategory from '../SectionWithCategory';
 import Category from '@/UIkit/Category';
 import { IData } from '@/store/types';
 import Helper from '@/utils/Helper';

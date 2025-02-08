@@ -24,7 +24,7 @@ export interface IFilms {
   year: number;
   description: string;
   rating?: string | number;
-  filmId?: number;
+  filmId: number;
 }
 
 export type IData<KeyType extends 'items' | 'films'> = {
@@ -33,3 +33,8 @@ export type IData<KeyType extends 'items' | 'films'> = {
   total: number;
   totalPages: number;
 };
+
+export interface IResponseAnswer {
+  message: string;
+  status: number;
+}

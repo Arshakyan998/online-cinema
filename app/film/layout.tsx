@@ -1,6 +1,5 @@
-import { Container } from "@/components";
+import { Container } from '@/globalComponents';
 
- 
 export default function RootLayout({
   children,
 }: Readonly<{

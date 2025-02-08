@@ -1,22 +1,22 @@
-import { NextPage, ResolvingMetadata } from "next";
-import { Metadata } from "next";
-import React from "react";
-import { SearchParams } from "../Types";
-import { SearchPageContent } from "@/components";
+import { NextPage, ResolvingMetadata } from 'next';
+import { SearchParams } from '../Types';
+import { Search } from '@/components';
+import { Metadata } from 'next';
+import React from 'react';
 
 export async function generateMetadata(
   params: SearchParams,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return {
-    title: "Поиск фильма",
+    title: 'Поиск фильма',
 
-    description: "Поиск вашего любимого филтма",
+    description: 'Поиск вашего любимого филтма',
   };
-} 
+}
 
 const SearchPage: NextPage<SearchParams> = () => {
-  return <SearchPageContent />;
+  return <Search />;
 };
 
 export default SearchPage;

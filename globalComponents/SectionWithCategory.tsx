@@ -1,16 +1,19 @@
 'use client';
 
+import { useLazyRemovefavoriteMoviesQuery } from '@/store/favoriteFilmsQuery/favoriteMovies';
+import { useAddFavoritesMoviesMutation } from '@/store/favoriteFilmsQuery/api';
 import { useTrendingMoviesQuery } from '@/store/filmsQuery/trendsMovieApi';
-import React, { CSSProperties, useEffect } from 'react';
+import React, { CSSProperties, useEffect, useMemo } from 'react';
+import { FavoritesWithoutId } from '@/GlobalTypes/Favorites';
+import { toast, ToastContainer } from 'react-toastify';
+import { useAppSelector, useObserver } from '@/hooks';
 import SlickSlider, { Settings } from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
+import { redirect } from 'next/navigation';
 import 'slick-carousel/slick/slick.css';
 import { Skeleton, Space } from 'antd';
 import { IData } from '@/store/types';
-import { useObserver } from '@/hooks';
 import Link from 'next/link';
-
-import { Heart } from 'lucide-react';
 import Cart from './Cart';
 
 const MOVIES_TYPES = {
@@ -32,8 +35,11 @@ interface Props {
   categoryName: string;
   requestType?: keyof typeof MOVIES_TYPES;
   externalData?: IData<'films'>;
-  action?: () => void;
+  action?: VoidFunction;
   actionButtonTitle?: string;
+  showFavoriteIcon?: boolean;
+  savedFavorites?: Record<number, string>;
+  actionAfterFavoriteActin?: VoidFunction;
 }
 
 const SectionWithCategory: React.FC<Props> = ({
@@ -44,6 +50,9 @@ const SectionWithCategory: React.FC<Props> = ({
   externalData,
   action,
   actionButtonTitle,
+  showFavoriteIcon = true,
+  savedFavorites,
+  actionAfterFavoriteActin,
 }) => {
   const {
     data: moviesData,
@@ -68,6 +77,11 @@ const SectionWithCategory: React.FC<Props> = ({
   const rootRef = React.useRef<HTMLElement>(null);
   const observer = useObserver({ root: rootRef.current });
 
+  const getUserId = useAppSelector(state => state['user/data'].user.id);
+
+  const [trigger] = useAddFavoritesMoviesMutation();
+
+  const [removeTrigger] = useLazyRemovefavoriteMoviesQuery();
   let delay = 1;
 
   const createAnimation = (element: HTMLDivElement | null, i: number) => {
@@ -135,6 +149,33 @@ const SectionWithCategory: React.FC<Props> = ({
       });
     }
   }, [data?.films]);
+  const styleWithAnimation: CSSProperties = useMemo(
+    () => (withAnimation ? { opacity: 0, transform: 'translateY(20px)' } : {}),
+    [withAnimation],
+  );
+  const getInfo = async (el: FavoritesWithoutId) => {
+    if (!getUserId) redirect('/auth/signup');
+    const data = await trigger({
+      data: el,
+      id: getUserId,
+    }).unwrap();
+
+    toast.success(data.message);
+    actionAfterFavoriteActin?.();
+  };
+
+  const removeFromFavorites = async (filmId: number) => {
+    if (!getUserId) redirect('/auth/signup');
+
+    if (!savedFavorites?.[filmId]) return;
+
+    const data = await removeTrigger({
+      filmId: savedFavorites[filmId],
+      userId: getUserId,
+    }).unwrap();
+    toast.success(data.message);
+    actionAfterFavoriteActin?.();
+  };
 
   if (error) return <div>error</div>;
   if (isLoading)
@@ -145,12 +186,9 @@ const SectionWithCategory: React.FC<Props> = ({
     );
 
   const content = data?.films?.map((el, i) => {
-    const styleWithAnimation: CSSProperties = withAnimation
-      ? { opacity: 0, transform: 'translateY(20px)' }
-      : {};
-
     return (
       <div key={`${el.filmId || el.kinopoiskId}`} className="gap-6 my-2 w-3/12">
+        <ToastContainer position="bottom-right" />
         <div
           style={{ ...styleWithAnimation }}
           ref={element =>
@@ -159,10 +197,14 @@ const SectionWithCategory: React.FC<Props> = ({
         >
           {imgHeight && (
             <Cart
+              showFavoriteIcon={showFavoriteIcon}
+              addFavorites={getInfo}
               {...el}
               filmId={el.filmId || el.kinopoiskId}
               imgHeight={imgHeight}
               rating={el.rating || el.ratingKinopoisk}
+              IsFavorite={!!savedFavorites?.[el.filmId!] || false}
+              removeFromFavorites={removeFromFavorites}
             />
           )}
         </div>

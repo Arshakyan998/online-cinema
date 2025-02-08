@@ -1,24 +1,48 @@
 'use client';
 
-import { useGetFavoritesQuery } from '@/store/favoriteFilmsQuery/getFavoriteMovies';
+import {
+  useGetFavoritesQuery,
+  useLazyGetFavoritesForCheckingQuery,
+} from '@/store/favoriteFilmsQuery/favoriteMovies';
 import { SectionWithCategory } from '@/globalComponents';
 import { useParams } from 'next/navigation';
 import { useAppSelector } from '@/hooks';
-import { Typography } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const Favorites: React.FC = () => {
-  const useId = useAppSelector(state => state['user/data'].user.id);
+  const userId = useAppSelector(state => state['user/data'].user.id);
   const params = useParams();
 
-  const { data } = useGetFavoritesQuery(params.id as string);
+  const { data, refetch } = useGetFavoritesQuery(params.id as string, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
-  if (params.id !== useId) {
+  const [trigger, { data: savedData }] = useLazyGetFavoritesForCheckingQuery();
+
+  useEffect(() => {
+    if (userId) trigger(userId);
+  }, [userId]);
+
+  const actionAfterFavoriteActin = () => {
+    refetch();
+  };
+
+  if (params.id !== userId) {
     return null;
   }
 
-  // return <SectionWithCategory categoryName="Фавориты" />;
-  return <Typography> Фавориты</Typography>;
+  console.log(data);
+
+  return (
+    <SectionWithCategory
+      externalData={{ films: data }}
+      savedFavorites={savedData}
+      categoryName="Фавориты"
+      showFavoriteIcon={true}
+      actionAfterFavoriteActin={actionAfterFavoriteActin}
+    />
+  );
 };
 
 export default Favorites;

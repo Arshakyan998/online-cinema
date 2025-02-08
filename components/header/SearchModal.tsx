@@ -2,11 +2,12 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { saveGenres } from '@/store/genreQuery/saveGeners';
 import { useGetGenresQuery } from '@/store/genreQuery/api';
-import Loading from '../../globalComponents/Loading';
 import { IGenre } from '@/GlobalTypes/Genre';
+import { Loading } from '@/globalComponents';
 import { Button, Input, Tag } from '@/UIkit';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from '@/hooks';
+import { Form } from 'antd';
 import React from 'react';
 
 interface Props {
@@ -82,46 +83,53 @@ const SearchModal: React.FC<Props> = ({ closeFunction }) => {
       style={{ height: innerHeight }}
     >
       <div className="w-9/12 absolute h-5/6   rounded-lg z-20  bg-background top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] ">
-        <div className="flex justify-around p-5">
-          <div className="flex w-6/12 flex-col">
-            <div className="flex flex-wrap gap-2 p-3 border-b border-white">
-              {data?.map(genre => {
-                return (
-                  <Tag
-                    key={genre.id}
-                    onClick={() => onClickHandler(genre)}
-                    disabled={usedGenres.current.has(genre.id) || !!searchValue}
-                  >
-                    {genre.genre}
-                  </Tag>
-                );
-              })}
+        <Form>
+          <div className="flex justify-around p-5">
+            <div className="flex w-6/12 flex-col">
+              <div className="flex flex-wrap gap-2 p-3 border-b border-white">
+                {data?.map(genre => {
+                  return (
+                    <Tag
+                      key={genre.id}
+                      onClick={() => onClickHandler(genre)}
+                      disabled={
+                        usedGenres.current.has(genre.id) || !!searchValue
+                      }
+                    >
+                      {genre.genre}
+                    </Tag>
+                  );
+                })}
+              </div>
+              <div className="flex items-start flex-wrap gap-2 p-3 border border-white rounded-lg min-h-56 h-fit m-3">
+                {selectedGenres.map(selected => {
+                  return (
+                    <Tag
+                      key={selected.id}
+                      isClosable
+                      disabled={!!searchValue}
+                      onClose={() => closeHandler(selected.id)}
+                    >
+                      {selected.genre}
+                    </Tag>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex items-start flex-wrap gap-2 p-3 border border-white rounded-lg min-h-56 h-fit m-3">
-              {selectedGenres.map(selected => {
-                return (
-                  <Tag
-                    key={selected.id}
-                    isClosable
-                    disabled={!!searchValue}
-                    onClose={() => closeHandler(selected.id)}
-                  >
-                    {selected.genre}
-                  </Tag>
-                );
-              })}
-            </div>
-          </div>
 
-          <div className="w-6/12 items-end">
-            <div className="w-[88%]">
-              <Input placeholder="Поиск по названю" onChange={searchHandler} />
+            <div className="w-6/12 items-end">
+              <div className="w-[88%]">
+                <Input
+                  placeholder="Поиск по названю"
+                  onChange={searchHandler}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <Button className={'w-4/12 m-auto mt-48'} onClick={searchByFilters}>
-          Найти
-        </Button>
+          <Button className={'w-4/12 m-auto mt-48'} onClick={searchByFilters}>
+            Найти
+          </Button>
+        </Form>
       </div>
     </div>,
     document.body,

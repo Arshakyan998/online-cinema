@@ -1,12 +1,8 @@
 'use client';
 
-import userSlice, { saveUser } from '@/store/user/userSlice';
 import { useCreateUserMutation } from '@/store/auth/api';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
-import { setCookie } from 'cookies-next/client';
 import { useRouter } from 'next/navigation';
-import { User } from '@/store/auth/types';
-import { useAppDispatch } from '@/hooks';
 import Helper from '@/utils/Helper';
 import { Button } from '@/UIkit';
 import React from 'react';
@@ -16,8 +12,8 @@ const SignIn: React.FC = () => {
     {} as ICreateUserDate,
   );
   const [trigger, { error }] = useCreateUserMutation({});
-  const dispatch = useAppDispatch();
-  const navigate = useRouter();
+  // const dispatch = useAppDispatch();
+  // const navigate = useRouter();
   if (error) {
     console.log(error);
   }

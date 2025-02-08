@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 
+import { useLazyGetUserQuery } from '@/store/auth/loginApi';
 import LinkWithUserId from '@/globalComponents/LinkWithId';
 import Container from '../../globalComponents/Container';
 import { useCreateUserMutation } from '@/store/auth/api';
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import { Settings, Heart, LogOut } from 'lucide-react';
 import { Avatar, Dropdown, MenuProps } from 'antd';
 import userSlice from '@/store/user/userSlice';
-import { Settings, Heart } from 'lucide-react';
+import { useParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import SearchModal from './SearchModal';
+import Helper from '@/utils/Helper';
 import { Button } from '@/UIkit';
 const routes = [
   {
@@ -39,17 +42,44 @@ const menuItems: MenuProps['items'] = [
 
     icon: <Heart />,
   },
+  {
+    key: 3,
+    icon: <LogOut />,
+    label: 'Выход',
+    onClick: () => {},
+  },
 ];
 
 export const Header = () => {
   const [showModal, setShowModal] = React.useState(false);
 
+  const dispatch = useAppDispatch();
+
+  const [trigger, { data }] = useLazyGetUserQuery();
   const modalControllerHandler = (isOpen: boolean = true) => {
     setShowModal(isOpen);
   };
 
   const user = useAppSelector(state => state['user/data'].user);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
 
+    const access = urlParams.get('accessToken');
+
+    if (access) {
+      trigger(access);
+      window.location.href = 'http://localhost:3000';
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      dispatch(userSlice.actions.saveUser(data));
+      Helper.updateTokens(data.tokens);
+    }
+  }, [data]);
+
+  console.log(user.avatarUrl);
 
   return (
     <>
@@ -92,9 +122,7 @@ export const Header = () => {
                     className={'animate-pulse'}
                     onClick={() => modalControllerHandler()}
                   >
-
                     Открть филитр
-
                   </Button>
                 </div>
               </div>

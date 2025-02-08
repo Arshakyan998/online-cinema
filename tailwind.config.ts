@@ -6,6 +6,7 @@ export default {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './UIkit/**/*.{js,ts,jsx,tsx,mdx}',
+    './globalComponents/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     // container: {

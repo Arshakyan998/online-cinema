@@ -33,7 +33,6 @@ export default function RootLayout({
 }>) {
   const showHeader = store.getState()['header/data'].visibility;
 
-
   return (
     <html lang="en">
       <StoreProvider>

@@ -3,8 +3,9 @@ import React, { PropsWithChildren, useLayoutEffect, useState } from 'react';
 import { useLazyGetUserQuery } from '@/store/auth/loginApi';
 import { saveUser } from '@/store/user/userSlice';
 import { getCookie } from 'cookies-next/client';
+import { Loading } from '@/globalComponents';
 import { useAppDispatch } from '@/hooks';
-import { Loading } from '@/components';
+import Helper from '@/utils/Helper';
 
 const InitiateUser = ({ children }: PropsWithChildren) => {
   const dispatch = useAppDispatch();
@@ -18,14 +19,13 @@ const InitiateUser = ({ children }: PropsWithChildren) => {
       try {
         const user = await trigger(getAccessToken).unwrap();
 
-        console.log(user);
-
         user && dispatch(saveUser(user));
-
+        Helper.updateTokens(user.tokens);
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        console.error(error);
+        console.warn(error);
+        error;
       } finally {
         setIsLoading(false);
       }

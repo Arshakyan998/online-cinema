@@ -3,6 +3,7 @@ import { Content } from '@/components/mainPage/Content';
 import { Metadata, ResolvingMetadata } from 'next';
 import { Container } from '@/globalComponents';
 import filmsApi from '@/store/filmsQuery/api';
+import { Sections } from '@/components';
 import { SearchParams } from './Types';
 import { store } from '@/store/store';
 
@@ -37,18 +38,7 @@ export default async function Home() {
     <Container>
       <Content isLoading={isLoading} error={error} data={data} />
       {/* <Genres/> */}
-      <SectionWithCategory
-        sliderOn
-        withAnimation
-        categoryName="В Тренде"
-        requestType="trades"
-      />
-      <SectionWithCategory
-        categoryName="Лучше за все время"
-        withAnimation
-        requestType="bestAllTime"
-        
-      />
+      <Sections />
     </Container>
   );
 }

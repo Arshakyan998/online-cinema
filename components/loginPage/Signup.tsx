@@ -5,10 +5,10 @@ import { useLoginMutation } from '@/store/auth/loginApi';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
 import { saveUser } from '@/store/user/userSlice';
+import React, { useEffect } from 'react';
 import { store } from '@/store/store';
 import Helper from '@/utils/Helper';
 import { Button } from '@/UIkit';
-import React from 'react';
 
 const Signup: React.FC = () => {
   const [userData, setUserData] = React.useState<
@@ -23,8 +23,6 @@ const Signup: React.FC = () => {
     setUserData(prev => ({ ...prev, [name]: date }));
   };
 
-  console.log(params);
-
   const createUser: React.FormEventHandler<HTMLButtonElement> = async e => {
     e.preventDefault();
     const createdUser = await trigger(userData).unwrap();
@@ -34,6 +32,10 @@ const Signup: React.FC = () => {
       dispatch(saveUser(createdUser));
       router.replace('/');
     }
+  };
+
+  const googleAuth = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google/login`;
   };
 
   return (
@@ -159,7 +161,11 @@ const Signup: React.FC = () => {
           <hr className="my-6 border-gray-400" />
 
           <div className="space-x-8 flex justify-center">
-            <button type="button" className="border-none outline-none">
+            <button
+              type="button"
+              className="border-none outline-none google"
+              onClick={googleAuth}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="30px"

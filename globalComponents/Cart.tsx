@@ -1,3 +1,4 @@
+import { FavoritesWithoutId } from '@/GlobalTypes/Favorites';
 import type { IFilms } from '@/store/types';
 import { Heart } from 'lucide-react';
 import Helper from '@/utils/Helper';
@@ -8,6 +9,10 @@ import React from 'react';
 
 interface Props extends IFilms {
   imgHeight: null | number;
+  addFavorites: (data: FavoritesWithoutId) => void;
+  showFavoriteIcon: boolean;
+  IsFavorite?: boolean;
+  removeFromFavorites: (filmId: number) => void;
 }
 
 const Cart: React.FC<Props> = ({
@@ -18,6 +23,10 @@ const Cart: React.FC<Props> = ({
   imgHeight,
   filmId,
   rating,
+  addFavorites,
+  showFavoriteIcon,
+  IsFavorite,
+  removeFromFavorites,
 }) => {
   return (
     <div className=" rounded-lg overflow-hidden  cursor-pointer  mx-2">
@@ -33,7 +42,29 @@ const Cart: React.FC<Props> = ({
             height: imgHeight || '100%',
           }}
         />
-        {/* <Heart className="absolute top-1.5 right-1" /> */}
+        {showFavoriteIcon &&
+          (IsFavorite ? (
+            <Heart
+              fill="yellow"
+              onClick={() => removeFromFavorites(filmId)}
+              className="absolute top-1.5 right-1"
+            />
+          ) : (
+            <Heart
+              className="absolute top-1.5 right-1"
+              onClick={() =>
+                addFavorites({
+                  posterUrlPreview,
+                  nameRu,
+                  year,
+                  genres,
+                  imgHeight,
+                  filmId,
+                  rating,
+                })
+              }
+            />
+          ))}
         <Link
           href={`/film/${filmId}`}
           className="absolute  bottom-4 left-4 bg-white text-black text-sm px-4 py-2 rounded-md flex items-center gap-2 hover:bg-gray-200 transition"

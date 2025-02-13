@@ -5,8 +5,8 @@ export default {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './UIkit/**/*.{js,ts,jsx,tsx,mdx}',
-    './globalComponents/**/*.{js,ts,jsx,tsx,mdx}',
+    './uiKit/**/*.{js,ts,jsx,tsx,mdx}',
+    './shared/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     // container: {

@@ -3,12 +3,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { saveGenres } from '@/store/genreQuery/saveGeners';
 import { useGetGenresQuery } from '@/store/genreQuery/api';
 import { IGenre } from '@/GlobalTypes/Genre';
-import { Loading } from '@/globalComponents';
-import { Button, Input, Tag } from '@/UIkit';
+import { Button, Input, Tag } from '@/uiKit';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from '@/hooks';
+import React, { memo } from 'react';
 import { Form } from 'antd';
-import React from 'react';
 
 interface Props {
   closeFunction: (isOpne: boolean) => void;
@@ -45,6 +44,7 @@ const SearchModal: React.FC<Props> = ({ closeFunction }) => {
       redirect && router.replace(`/search/?${params.toString()}`);
       return;
     }
+
     params.set(key, searchValue);
     redirect && router.replace(`/search/?moviesName=${searchValue}`);
   };
@@ -136,4 +136,4 @@ const SearchModal: React.FC<Props> = ({ closeFunction }) => {
   );
 };
 
-export default SearchModal;
+export default memo(SearchModal);

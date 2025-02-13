@@ -1,7 +1,6 @@
 import headerSlice from '@/store/header/headerSice';
+import { SignUp } from '@/components';
 import { NextPage } from 'next';
-import {  SignUp } from '@/components';
-import { store } from '@/store/store';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -11,10 +10,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
     description: 'регистрируйся или заходи',
   };
-} 
+}
 
 const Page: NextPage = () => {
-  store.dispatch(headerSlice.actions.changeVisibility(true));
+  // store.dispatch(headerSlice.actions.changeVisibility(true));
 
   return <SignUp />;
 };

@@ -4,10 +4,12 @@ import {
   useGetFavoritesQuery,
   useLazyGetFavoritesForCheckingQuery,
 } from '@/store/favoriteFilmsQuery/favoriteMovies';
-import { SectionWithCategory } from '@/globalComponents';
 import { useParams } from 'next/navigation';
-import { useAppSelector } from '@/hooks';
 import React, { useEffect } from 'react';
+
+import { SectionWithCategory } from '@/shared';
+import { useAppSelector } from '@/hooks';
+import { IData } from '@/store/types';
 
 const Favorites: React.FC = () => {
   const userId = useAppSelector(state => state['user/data'].user.id);
@@ -32,11 +34,9 @@ const Favorites: React.FC = () => {
     return null;
   }
 
-  console.log(data);
-
   return (
     <SectionWithCategory
-      externalData={{ films: data }}
+      externalData={{ films: data || [] } as IData<'films'>}
       savedFavorites={savedData}
       categoryName="Фавориты"
       showFavoriteIcon={true}

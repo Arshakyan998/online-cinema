@@ -165,7 +165,7 @@ const SectionWithCategory: React.FC<Props> = ({
   };
 
   const removeFromFavorites = async (filmId: number) => {
-    if (!getUserId) redirect('/auth/signup');
+    if (!getUserId) redirect('/auth/signin');
 
     if (!savedFavorites?.[filmId]) return;
 

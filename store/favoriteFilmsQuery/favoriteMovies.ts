@@ -1,9 +1,9 @@
-import { IResponseAnswer } from '../types';
+import { IFilms, IResponseAnswer } from '../types';
 import favoriteMovieApi from './api';
 
 const favoriteMovies = favoriteMovieApi.injectEndpoints({
   endpoints: build => ({
-    getFavorites: build.query<string, string>({
+    getFavorites: build.query<IFilms[], string>({
       query: id => ({
         url: `favorite-movies/${id}`,
       }),

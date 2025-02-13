@@ -1,4 +1,4 @@
-import StoreProvider from '@/Providers/ReduxProvider';
+import StoreProvider from '@/providers/ReduxProvider';
 import { Header } from '@/components/header/Header';
 import loginApi from '@/store/auth/loginApi';
 import localFont from 'next/font/local';
@@ -36,15 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StoreProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <InitiateUser>
+        <InitiateUser>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
             <Inspect />
             {showHeader && <Header />}
             {children}
-          </InitiateUser>
-        </body>
+          </body>
+        </InitiateUser>
       </StoreProvider>
     </html>
   );

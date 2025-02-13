@@ -1,240 +1,225 @@
 'use client';
+import React, { useEffect, useState } from 'react';
 
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
-import { useLoginMutation } from '@/store/auth/loginApi';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import {
+  useCreateUserMutation,
+  useSendMailMutation,
+  useVerifyMailMutation,
+} from '@/store/auth/api';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
-import { saveUser } from '@/store/user/userSlice';
-import React, { useEffect } from 'react';
-import { store } from '@/store/store';
-import Helper from '@/utils/Helper';
-import { Button } from '@/UIkit';
+import { redirect } from 'next/navigation';
+import { Button } from '@/uiKit';
+import { OTP } from '@/shared';
 
-const Signup: React.FC = () => {
-  const [userData, setUserData] = React.useState<
-    Pick<ICreateUserDate, 'email' | 'password'>
-  >({} as ICreateUserDate);
+const SignUp: React.FC = () => {
+  const [userData, setUserData] = React.useState<ICreateUserDate>(
+    {} as ICreateUserDate,
+  );
 
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const params = useSearchParams();
-  const [trigger, { error }] = useLoginMutation();
-  const setDataFormUser = (name: 'email' | 'password', date: string) => {
+  const [showVerifyPart, setShowVerifyPart] = useState(false);
+  const [verifyCode, setVerifyCode] = useState<string[]>([]);
+  const [trigger, { error, data }] = useCreateUserMutation();
+  const [sendVerifyTrigger] = useVerifyMailMutation();
+  const [sendMail] = useSendMailMutation();
+  // const dispatch = useAppDispatch();
+  // const navigate = useRouter();
+  if (error) {
+    console.log(error);
+  }
+
+  const setDataFormUser = (name: keyof ICreateUserDate, date: string) => {
     setUserData(prev => ({ ...prev, [name]: date }));
   };
 
-  const createUser: React.FormEventHandler<HTMLButtonElement> = async e => {
+  const createUser: React.FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
     const createdUser = await trigger(userData).unwrap();
-
     if (createdUser) {
-      Helper.updateTokens(createdUser.tokens);
-      dispatch(saveUser(createdUser));
-      router.replace('/');
+      const dataExist = await sendMail(createdUser.email).unwrap();
+      if (dataExist) {
+        setShowVerifyPart(true);
+      }
     }
   };
 
-  const googleAuth = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google/login`;
+  const verifyMail = (code: string[]) => {
+    setVerifyCode(code);
   };
 
+  useEffect(() => {
+    if (verifyCode.length === 6 && data?.email && !error) {
+      sendVerifyTrigger({
+        email: data.email,
+        verificationCode: verifyCode.join(''),
+      }).then(() => redirect('/'));
+    }
+  }, [data, verifyCode]);
+
+  const onFinish = () => {};
   return (
-    <div className="flex justify-center items-center font-[sans-serif] h-full min-h-screen p-4">
-      <div className="max-w-md w-full mx-auto">
-        <form className="bg-opacity-70  p-6 shadow-[0_2px_16px_-3px_rgba(125,126,131,0.3)]">
-          <div className="mb-12">
-            <h3 className="text-gray-800 text-3xl font-bold">Sign in</h3>
-          </div>
+    <section className=" dark:bg-gray-900">
+      <div className="lg:grid  W-[80%]">
+        <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
+          {!showVerifyPart ? (
+            <div className="max-w-xl lg:max-w-3xl">
+              <form
+                className="mt-8 grid grid-cols-6 gap-6"
+                onSubmit={createUser}
+              >
+                <div className="col-span-6 col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="fullName"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    Full name
+                  </label>
 
-          <div>
-            <div className="relative flex items-center">
-              <input
-                name="email"
-                type="text"
-                required
-                className="bg-transparent w-full text-sm text-white border-b border-gray-400 focus:border-gray-800 pl-2 pr-8 py-3 outline-none placeholder:text-gray-800"
-                placeholder="Enter email"
-                onChange={e =>
-                  setDataFormUser('email', e.currentTarget.value.trim())
-                }
+                  <input
+                    type="text"
+                    id="fullName"
+                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    onChange={e =>
+                      setDataFormUser('fullName', e.currentTarget.value)
+                    }
+                  />
+                </div>
+                <div className="col-span-6 col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    name
+                  </label>
+
+                  <input
+                    type="text"
+                    id="name"
+                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    onChange={e =>
+                      setDataFormUser('name', e.currentTarget.value)
+                    }
+                  />
+                </div>
+                <div className="col-span-6">
+                  <label
+                    htmlFor="Email"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    Email
+                  </label>
+
+                  <input
+                    type="email"
+                    id="Email"
+                    name="email"
+                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    onChange={e =>
+                      setDataFormUser('email', e.currentTarget.value.trim())
+                    }
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="Password"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    Password
+                  </label>
+
+                  <input
+                    type="password"
+                    id="Password"
+                    name="password"
+                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    onChange={e =>
+                      setDataFormUser('password', e.currentTarget.value.trim())
+                    }
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-3">
+                  <label
+                    htmlFor="PasswordConfirmation"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    Password Confirmation
+                  </label>
+
+                  <input
+                    type="password"
+                    id="PasswordConfirmation"
+                    name="password_confirmation"
+                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                  />
+                </div>
+
+                <div className="col-span-6">
+                  <label htmlFor="MarketingAccept" className="flex gap-4">
+                    <input
+                      type="checkbox"
+                      id="MarketingAccept"
+                      name="marketing_accept"
+                      className="size-5 rounded-md border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:focus:ring-offset-gray-900"
+                    />
+
+                    <span className="text-sm text-gray-700 dark:text-gray-200">
+                      I want to receive emails about events, product updates and
+                      company announcements.
+                    </span>
+                  </label>
+                </div>
+
+                <div className="col-span-6">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    By creating an account, you agree to our
+                    <a
+                      href="#"
+                      className="text-gray-700 underline dark:text-gray-200"
+                    >
+                      terms and conditions
+                    </a>
+                    and
+                    <a
+                      href="#"
+                      className="text-gray-700 underline dark:text-gray-200"
+                    >
+                      {' '}
+                      privacy policy{' '}
+                    </a>
+                    .
+                  </p>
+                </div>
+
+                <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
+                  <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white">
+                    Create an account
+                  </button>
+
+                  <p className="mt-4 text-sm text-gray-500 sm:mt-0 dark:text-gray-400">
+                    Already have an account?
+                    <Button className="text-gray-700 underline dark:text-gray-200">
+                      Log in
+                    </Button>
+                    .
+                  </p>
+                </div>
+              </form>
+            </div>
+          ) : (
+            data?.email && (
+              <OTP
+                email={data.email}
+                onChange={verifyMail}
+                onFinish={onFinish}
+                buttonDisable={verifyCode.length !== 6}
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#333"
-                stroke="#333"
-                className="w-[18px] h-[18px] absolute right-2"
-                viewBox="0 0 682.667 682.667"
-              >
-                <defs>
-                  <clipPath id="a" clipPathUnits="userSpaceOnUse">
-                    <path d="M0 512h512V0H0Z" data-original="#000000"></path>
-                  </clipPath>
-                </defs>
-                <g
-                  clipPath="url(#a)"
-                  transform="matrix(1.33 0 0 -1.33 0 682.667)"
-                >
-                  <path
-                    fill="none"
-                    strokeMiterlimit="10"
-                    strokeWidth="40"
-                    d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
-                    data-original="#000000"
-                  ></path>
-                  <path
-                    d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
-                    data-original="#000000"
-                  ></path>
-                </g>
-              </svg>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <div className="relative flex items-center">
-              <input
-                name="password"
-                type="password"
-                required
-                className="bg-transparent w-full text-sm text-gray-800 border-b border-gray-400 focus:border-gray-800 pl-2 pr-8 py-3 outline-none placeholder:text-gray-800"
-                placeholder="Enter password"
-                onChange={e =>
-                  setDataFormUser('password', e.currentTarget.value.trim())
-                }
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#333"
-                stroke="#333"
-                className="w-[18px] h-[18px] absolute right-2 cursor-pointer"
-                viewBox="0 0 128 128"
-              >
-                <path
-                  d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 shrink-0 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-3 block text-sm text-gray-800"
-              >
-                Remember me
-              </label>
-            </div>
-            <div>
-              <button className="text-blue-600 text-sm font-semibold hover:underline">
-                Forgot Password?
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-12">
-            <button
-              type="button"
-              className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white bg-gray-800 hover:bg-[#222] focus:outline-none"
-              onClick={createUser}
-            >
-              Sign in
-            </button>
-            <p className="text-gray-800 text-sm text-center mt-6">
-              Don't have an account{' '}
-              <a
-                href="javascript:void(0);"
-                className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
-              >
-                Register here
-              </a>
-            </p>
-          </div>
-
-          <hr className="my-6 border-gray-400" />
-
-          <div className="space-x-8 flex justify-center">
-            <button
-              type="button"
-              className="border-none outline-none google"
-              onClick={googleAuth}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30px"
-                className="inline"
-                viewBox="0 0 512 512"
-              >
-                <path
-                  fill="#fbbd00"
-                  d="M120 256c0-25.367 6.989-49.13 19.131-69.477v-86.308H52.823C18.568 144.703 0 198.922 0 256s18.568 111.297 52.823 155.785h86.308v-86.308C126.989 305.13 120 281.367 120 256z"
-                  data-original="#fbbd00"
-                />
-                <path
-                  fill="#0f9d58"
-                  d="m256 392-60 60 60 60c57.079 0 111.297-18.568 155.785-52.823v-86.216h-86.216C305.044 385.147 281.181 392 256 392z"
-                  data-original="#0f9d58"
-                />
-                <path
-                  fill="#31aa52"
-                  d="m139.131 325.477-86.308 86.308a260.085 260.085 0 0 0 22.158 25.235C123.333 485.371 187.62 512 256 512V392c-49.624 0-93.117-26.72-116.869-66.523z"
-                  data-original="#31aa52"
-                />
-                <path
-                  fill="#3c79e6"
-                  d="M512 256a258.24 258.24 0 0 0-4.192-46.377l-2.251-12.299H256v120h121.452a135.385 135.385 0 0 1-51.884 55.638l86.216 86.216a260.085 260.085 0 0 0 25.235-22.158C485.371 388.667 512 324.38 512 256z"
-                  data-original="#3c79e6"
-                />
-                <path
-                  fill="#cf2d48"
-                  d="m352.167 159.833 10.606 10.606 84.853-84.852-10.606-10.606C388.668 26.629 324.381 0 256 0l-60 60 60 60c36.326 0 70.479 14.146 96.167 39.833z"
-                  data-original="#cf2d48"
-                />
-                <path
-                  fill="#eb4132"
-                  d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z"
-                  data-original="#eb4132"
-                />
-              </svg>
-            </button>
-            <button type="button" className="border-none outline-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30px"
-                fill="#000"
-                viewBox="0 0 22.773 22.773"
-              >
-                <path
-                  d="M15.769 0h.162c.13 1.606-.483 2.806-1.228 3.675-.731.863-1.732 1.7-3.351 1.573-.108-1.583.506-2.694 1.25-3.561C13.292.879 14.557.16 15.769 0zm4.901 16.716v.045c-.455 1.378-1.104 2.559-1.896 3.655-.723.995-1.609 2.334-3.191 2.334-1.367 0-2.275-.879-3.676-.903-1.482-.024-2.297.735-3.652.926h-.462c-.995-.144-1.798-.932-2.383-1.642-1.725-2.098-3.058-4.808-3.306-8.276v-1.019c.105-2.482 1.311-4.5 2.914-5.478.846-.52 2.009-.963 3.304-.765.555.086 1.122.276 1.619.464.471.181 1.06.502 1.618.485.378-.011.754-.208 1.135-.347 1.116-.403 2.21-.865 3.652-.648 1.733.262 2.963 1.032 3.723 2.22-1.466.933-2.625 2.339-2.427 4.74.176 2.181 1.444 3.457 3.028 4.209z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </button>
-            <button type="button" className="border-none outline-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30px"
-                fill="#007bff"
-                viewBox="0 0 167.657 167.657"
-              >
-                <path
-                  d="M83.829.349C37.532.349 0 37.881 0 84.178c0 41.523 30.222 75.911 69.848 82.57v-65.081H49.626v-23.42h20.222V60.978c0-20.037 12.238-30.956 30.115-30.956 8.562 0 15.92.638 18.056.919v20.944l-12.399.006c-9.72 0-11.594 4.618-11.594 11.397v14.947h23.193l-3.025 23.42H94.026v65.653c41.476-5.048 73.631-40.312 73.631-83.154 0-46.273-37.532-83.805-83.828-83.805z"
-                  data-original="#010002"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </form>
+            )
+          )}
+        </main>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default Signup;
+export default SignUp;

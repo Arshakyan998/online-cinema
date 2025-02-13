@@ -3,7 +3,7 @@ import { Metadata, NextApiHandler, ResolvingMetadata } from 'next';
 import { filmApiGetById } from '@/store/filmBySymbolQuery/api';
 import Description from '@/components/filmIdPage/Description';
 import Player from '@/components/filmIdPage/Player';
-import { Loading } from '@/globalComponents';
+import { Loading } from '@/shared';
 import { SearchParams } from '../../Types';
 import { store } from '@/store/store';
 import React from 'react';

@@ -1,44 +1,38 @@
 'use client';
-import React, { PropsWithChildren, useLayoutEffect, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
+
 import { useLazyGetUserQuery } from '@/store/auth/loginApi';
 import { saveUser } from '@/store/user/userSlice';
 import { getCookie } from 'cookies-next/client';
-import { Loading } from '@/globalComponents';
 import { useAppDispatch } from '@/hooks';
 import Helper from '@/utils/Helper';
+import { Loading } from '@/shared';
 
 const InitiateUser = ({ children }: PropsWithChildren) => {
   const dispatch = useAppDispatch();
-  const [isLoading, setIsLoading] = useState(false);
-  const [trigger, { data, error }] = useLazyGetUserQuery();
+  const [trigger, { data, error, isLoading }] = useLazyGetUserQuery();
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const getAccessToken = getCookie('access_token');
 
     if (getAccessToken) {
-      try {
-        const user = await trigger(getAccessToken).unwrap();
-
-        user && dispatch(saveUser(user));
-        Helper.updateTokens(user.tokens);
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        console.warn(error);
-        error;
-      } finally {
-        setIsLoading(false);
-      }
+      const user = await trigger(getAccessToken).unwrap();
+      user && dispatch(saveUser(user));
+      Helper.updateTokens(user.tokens);
     }
-
-    setIsLoading(false);
-  };
+  }, []);
 
   useLayoutEffect(() => {
     getData();
   }, []);
 
-  if (isLoading) return <Loading />;
+  // if (!data && !error && isLoading) return <Loading />;
 
   return children;
 };

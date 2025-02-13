@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
 import CustomBaseQuery from '../baseQuery';
+import { IResponseAnswer } from '../types';
 import { User } from '@/GlobalTypes/User';
 const Auth = createApi({
   baseQuery: (...args) => CustomBaseQuery(...args, true),
@@ -13,8 +14,36 @@ const Auth = createApi({
         method: 'POST',
       }),
     }),
+
+    sendMail: build.mutation<IResponseAnswer, string>({
+      query: email => ({
+        url: 'email/send-email',
+        method: 'POST',
+        body: {
+          email,
+        },
+      }),
+    }),
+
+    verifyMail: build.mutation<
+      IResponseAnswer,
+      { email: string; verificationCode: string }
+    >({
+      query: ({ email, verificationCode }) => ({
+        url: 'email/verify-email',
+        method: 'POST',
+        body: {
+          email,
+          code: verificationCode,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useCreateUserMutation } = Auth;
+export const {
+  useCreateUserMutation,
+  useSendMailMutation,
+  useVerifyMailMutation,
+} = Auth;
 export default Auth;

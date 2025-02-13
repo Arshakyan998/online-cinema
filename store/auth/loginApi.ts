@@ -1,6 +1,7 @@
-import { useLazyGetUserQuery } from '@/store/auth/loginApi';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
 import { Tokens, User } from '@/GlobalTypes/User';
+import { IResponseAnswer } from '../types';
+import { LogOut } from 'lucide-react';
 import Auth from './api';
 
 const loginApi = Auth.injectEndpoints({
@@ -32,9 +33,11 @@ const loginApi = Auth.injectEndpoints({
         method: 'POST',
       }),
     }),
-    logOut: build.query({
-      query: () => ({
+
+    logOut: build.query<IResponseAnswer, string>({
+      query: id => ({
         url: '/auth/logout',
+        method: 'GET',
       }),
     }),
   }),

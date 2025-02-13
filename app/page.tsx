@@ -1,7 +1,7 @@
-import SectionWithCategory from '@/globalComponents/SectionWithCategory';
+import SectionWithCategory from '@/shared/SectionWithCategory';
 import { Content } from '@/components/mainPage/Content';
 import { Metadata, ResolvingMetadata } from 'next';
-import { Container } from '@/globalComponents';
+import { Container } from '@/shared';
 import filmsApi from '@/store/filmsQuery/api';
 import { Sections } from '@/components';
 import { SearchParams } from './Types';

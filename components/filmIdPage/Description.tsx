@@ -1,11 +1,13 @@
-import SectionWithCategory from '../../globalComponents/SectionWithCategory';
-import type { IActor, IFilm } from '@/store/filmBySymbolQuery/type';
-import Category from '@/UIkit/Category';
-import { IData } from '@/store/types';
-import Helper from '@/utils/Helper';
-import { Tag } from '@/UIkit';
 import { Rate } from 'antd';
 import React from 'react';
+
+import type { IActor, IFilm } from '@/store/filmBySymbolQuery/type';
+import SectionWithCategory from '../../shared/SectionWithCategory';
+import Category from '@/uiKit/Category';
+import CommentSection from './Comments';
+import { IData } from '@/store/types';
+import Helper from '@/utils/Helper';
+import { Tag } from '@/uiKit';
 
 const Description: React.FC<
   IFilm & {
@@ -135,6 +137,8 @@ const Description: React.FC<
           externalData={similarMovies}
         />
       )}
+
+      <CommentSection />
     </section>
   );
 };

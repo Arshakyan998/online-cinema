@@ -11,7 +11,7 @@ import { UploadChangeParam, UploadFile } from 'antd/es/upload';
 import { useChangeAvatarUrlMutation } from '@/store/user/api';
 import { UploadOutlined } from '@ant-design/icons';
 import { EditUser } from '@/GlobalTypes/User';
-import { Button } from '@/UIkit';
+import { Button } from '@/uiKit';
 
 const Settings: React.FC = () => {
   const user = useAppSelector(state => state['user/data'].user);
@@ -59,8 +59,11 @@ const Settings: React.FC = () => {
   const sendData: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
     e.stopPropagation();
+    console.log('z2');
 
     if (file) {
+      console.log('z');
+
       trigger({
         id: user.id,
         file,
@@ -80,7 +83,7 @@ const Settings: React.FC = () => {
         <h2 className="text-xl font-bold mb-4">Мой профиль</h2>
         <p className="text-gray-400 mb-6">Настройки вашего профиля</p>{' '}
         <ToastContainer position="bottom-right" />
-        <Form onSubmitCapture={sendData}>
+        <Form>
           <div className="flex flex-col items-center mb-4">
             <Avatar
               size={100}
@@ -142,7 +145,9 @@ const Settings: React.FC = () => {
           />
 
           <div className="flex gap-2 mb-2 mt-4">
-            <Button type="submit">Сохранить</Button>
+            <Button type="submit" onClick={sendData}>
+              Сохранить
+            </Button>
           </div>
         </Form>
       </div>

@@ -8,14 +8,19 @@ const baseQueryWithAuth = (baseUrl: string) =>
   fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers: Headers) => {
-      headers.set('X-API-KEY', process.env.NEXT_PUBLIC_API_KEY || '');
-
+      if (baseUrl === process.env.NEXT_PUBLIC_BASE_URL){
+        headers.set('X-API-KEY', process.env.NEXT_PUBLIC_API_KEY || '');
+      }
       if (!headers.has('authorization')) {
-        headers.set('authorization', `Bearer ${getCookie('access_token')}`);
+        headers.set('authorization', `Bearer ${getCookie  ('access_token')}`);
       }
 
       return headers;
     },
+    credentials:
+      baseUrl === process.env.NEXT_PUBLIC_BACKEND_URL
+        ? 'include'
+        : 'same-origin',
   });
 
 export const baseQuery = async (

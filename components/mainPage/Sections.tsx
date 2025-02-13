@@ -1,6 +1,6 @@
 'use client';
 import { useLazyGetFavoritesForCheckingQuery } from '@/store/favoriteFilmsQuery/favoriteMovies';
-import { SectionWithCategory } from '@/globalComponents';
+import { SectionWithCategory } from '@/shared';
 import { useAppSelector } from '@/hooks';
 import React, { useEffect } from 'react';
 

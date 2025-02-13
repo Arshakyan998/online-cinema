@@ -4,6 +4,7 @@ import { filmApiGetById } from './filmBySymbolQuery/api';
 import favoriteMovieApi from './favoriteFilmsQuery/api';
 import { saveGenres } from './genreQuery/saveGeners';
 import headerSlice from './header/headerSice';
+import commentsApi from './commentsQuery/api';
 import { filmsApi } from './filmsQuery/api';
 import { genreApi } from './genreQuery/api';
 import userSlice from './user/userSlice';
@@ -21,6 +22,7 @@ export const store = configureStore({
     [headerSlice.name]: headerSlice.reducer,
     [UserProfile.reducerPath]: UserProfile.reducer,
     [favoriteMovieApi.reducerPath]: favoriteMovieApi.reducer,
+    [commentsApi.reducerPath]: commentsApi.reducer,
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware()
@@ -29,7 +31,8 @@ export const store = configureStore({
       .concat(filmApiGetById.middleware)
       .concat(Auth.middleware)
       .concat(UserProfile.middleware)
-      .concat(favoriteMovieApi.middleware);
+      .concat(favoriteMovieApi.middleware)
+      .concat(commentsApi.middleware);
   },
 });
 

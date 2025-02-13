@@ -1,20 +1,21 @@
 'use client';
 
-import Link from 'next/link';
-
-import { useLazyGetUserQuery } from '@/store/auth/loginApi';
-import LinkWithUserId from '@/globalComponents/LinkWithId';
-import Container from '../../globalComponents/Container';
-import { useCreateUserMutation } from '@/store/auth/api';
+import loginApi, { useLazyGetUserQuery } from '@/store/auth/loginApi';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { Settings, Heart, LogOut } from 'lucide-react';
 import { Avatar, Dropdown, MenuProps } from 'antd';
-import userSlice from '@/store/user/userSlice';
-import { useParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import Link from 'next/link';
+
+import React, { useCallback, useEffect } from 'react';
+import { saveUser } from '@/store/user/userSlice';
+import LinkWithUserId from '@/shared/LinkWithId';
+import Container from '@/shared/Container';
+import { User } from '@/GlobalTypes/User';
 import SearchModal from './SearchModal';
+import { store } from '@/store/store';
 import Helper from '@/utils/Helper';
-import { Button } from '@/UIkit';
+import { Button } from '@/uiKit';
+
 const routes = [
   {
     title: 'Home',
@@ -39,14 +40,27 @@ const menuItems: MenuProps['items'] = [
   {
     key: 2,
     label: <LinkWithUserId href={'/favorites'}>Выбранные</LinkWithUserId>,
-
     icon: <Heart />,
   },
   {
     key: 3,
     icon: <LogOut />,
     label: 'Выход',
-    onClick: () => {},
+    onClick: () => {
+      console.log('zx');
+
+      if (store.getState()['user/data'].user.id) {
+        store
+          .dispatch(
+            loginApi.endpoints.logOut.initiate(
+              store.getState()['user/data'].user.id,
+            ),
+          )
+          .then(() => {
+            store.dispatch(saveUser({} as User));
+          });
+      }
+    },
   },
 ];
 
@@ -56,9 +70,10 @@ export const Header = () => {
   const dispatch = useAppDispatch();
 
   const [trigger, { data }] = useLazyGetUserQuery();
-  const modalControllerHandler = (isOpen: boolean = true) => {
+
+  const modalControllerHandler = useCallback((isOpen: boolean = true) => {
     setShowModal(isOpen);
-  };
+  }, []);
 
   const user = useAppSelector(state => state['user/data'].user);
   useEffect(() => {
@@ -74,12 +89,10 @@ export const Header = () => {
 
   useEffect(() => {
     if (data) {
-      dispatch(userSlice.actions.saveUser(data));
+      dispatch(saveUser(data));
       Helper.updateTokens(data.tokens);
     }
   }, [data]);
-
-  console.log(user.avatarUrl);
 
   return (
     <>
@@ -147,7 +160,7 @@ export const Header = () => {
                     </div>
                   </>
                 ) : (
-                  <Button href="/auth/signup">Вход</Button>
+                  <Button href="/auth/signin">Вход</Button>
                 )}
               </li>
               <li></li>

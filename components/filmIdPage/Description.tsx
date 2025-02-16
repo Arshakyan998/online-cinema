@@ -3,17 +3,20 @@ import React from 'react';
 
 import type { IActor, IFilm } from '@/store/filmBySymbolQuery/type';
 import SectionWithCategory from '../../shared/SectionWithCategory';
+import { ContentWithVirgule } from '@/shared';
+import { IData } from '@/GlobalTypes/Film';
 import Category from '@/uiKit/Category';
 import CommentSection from './Comments';
-import { IData } from '@/store/types';
 import Helper from '@/utils/Helper';
 import { Tag } from '@/uiKit';
+import Link from 'next/link';
 
 const Description: React.FC<
   IFilm & {
     staff: Record<string, IActor[]>;
     PrequelsAndSequels?: IData<'films'>;
     similarMovies?: IData<'films'>;
+    movieId: string;
   }
 > = ({
   ratingKinopoiskVoteCount,
@@ -31,9 +34,9 @@ const Description: React.FC<
   staff,
   PrequelsAndSequels,
   similarMovies,
+  movieId,
 }) => {
   const rating = (ratingImdb + ratingKinopoisk) / 2;
-
   const hours = Math.trunc(filmLength / 60);
   const minutes = Math.trunc(filmLength % 60);
 
@@ -93,7 +96,19 @@ const Description: React.FC<
               <p className="color-white mb-6 text-base" key={el}>
                 <span className="color-medium-gray text-base font-semibold">
                   {fullStaff[0]?.professionText}։{' '}
-                  {Helper.addVirgule(fullStaff, 'nameRu', 'span')}
+                  <ContentWithVirgule data={fullStaff} lastPoint=".">
+                    {data => {
+                      return (
+                        <Link
+                          className="underline underline-offset-4"
+                          href={`/actor/${data.staffId}`}
+                          key={data.staffId}
+                        >
+                          {data.nameRu}
+                        </Link>
+                      );
+                    }}
+                  </ContentWithVirgule>
                 </span>
               </p>
             );
@@ -138,7 +153,7 @@ const Description: React.FC<
         />
       )}
 
-      <CommentSection />
+      <CommentSection movieId={movieId} />
     </section>
   );
 };

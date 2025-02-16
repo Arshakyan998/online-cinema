@@ -35,17 +35,17 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <StoreProvider>
-        <InitiateUser>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <StoreProvider>
+          <InitiateUser>
             <Inspect />
             {showHeader && <Header />}
             {children}
-          </body>
-        </InitiateUser>
-      </StoreProvider>
+          </InitiateUser>
+        </StoreProvider>
+      </body>
     </html>
   );
 }

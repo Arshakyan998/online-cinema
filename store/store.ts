@@ -10,6 +10,7 @@ import { genreApi } from './genreQuery/api';
 import userSlice from './user/userSlice';
 import UserProfile from './user/api';
 import Auth from './auth/api';
+import actorsApi from './actorsQuery/api';
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     [UserProfile.reducerPath]: UserProfile.reducer,
     [favoriteMovieApi.reducerPath]: favoriteMovieApi.reducer,
     [commentsApi.reducerPath]: commentsApi.reducer,
+    [actorsApi.reducerPath]:actorsApi.reducer
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware()
@@ -32,7 +34,9 @@ export const store = configureStore({
       .concat(Auth.middleware)
       .concat(UserProfile.middleware)
       .concat(favoriteMovieApi.middleware)
-      .concat(commentsApi.middleware);
+      .concat(commentsApi.middleware)
+      .concat(actorsApi.middleware);
+
   },
 });
 

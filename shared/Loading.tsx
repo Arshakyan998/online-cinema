@@ -1,9 +1,12 @@
 'use client';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
 
 const Loading: React.FC = () => {
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
+    setVisible(true);
     function preloader() {
       setTimeout(() => {
         const preloader = document.getElementById('preloader');
@@ -21,6 +24,8 @@ const Loading: React.FC = () => {
     };
   }, []);
 
+  if (!visible) return null;
+  
   return (
     <div
       id="preloader"

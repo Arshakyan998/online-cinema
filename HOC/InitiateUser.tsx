@@ -16,7 +16,9 @@ import { Loading } from '@/shared';
 
 const InitiateUser = ({ children }: PropsWithChildren) => {
   const dispatch = useAppDispatch();
-  const [trigger, { data, error, isLoading }] = useLazyGetUserQuery();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [trigger, { data, isError }] = useLazyGetUserQuery();
 
   const getData = useCallback(async () => {
     const getAccessToken = getCookie('access_token');
@@ -25,6 +27,8 @@ const InitiateUser = ({ children }: PropsWithChildren) => {
       const user = await trigger(getAccessToken).unwrap();
       user && dispatch(saveUser(user));
       Helper.updateTokens(user.tokens);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
@@ -32,7 +36,11 @@ const InitiateUser = ({ children }: PropsWithChildren) => {
     getData();
   }, []);
 
-  // if (!data && !error && isLoading) return <Loading />;
+  useEffect(() => {
+    if (isError || data) setIsLoading(false);
+  }, [data, isError]);
+
+  if (isLoading) return <Loading />;
 
   return children;
 };

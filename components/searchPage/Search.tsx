@@ -34,7 +34,7 @@ const Search = () => {
     }
   }, [getMoviesName, getGenres]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading || DataByKeywordLoad) return <Loading />;
   if (error) return <div>Err</div>;
 
   const pageChange = (page: number) => {

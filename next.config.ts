@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
       'encrypted-tbn0.gstatic.com',
       'kinopoiskapiunofficial.tech',
       'img.freepik.com',
+      'lh3.googleusercontent.com',
+      'googleusercontent.com',
+      
     ],
   },
 };

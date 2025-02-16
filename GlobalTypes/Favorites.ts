@@ -1,4 +1,4 @@
-import { IFilms } from '@/store/types';
+import { IFilms } from '@/GlobalTypes/Film';
 
 export type Favorites = Pick<
   IFilms,

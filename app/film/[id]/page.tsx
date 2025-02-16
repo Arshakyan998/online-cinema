@@ -3,9 +3,9 @@ import { Metadata, NextApiHandler, ResolvingMetadata } from 'next';
 import { filmApiGetById } from '@/store/filmBySymbolQuery/api';
 import Description from '@/components/filmIdPage/Description';
 import Player from '@/components/filmIdPage/Player';
-import { Loading } from '@/shared';
 import { SearchParams } from '../../Types';
 import { store } from '@/store/store';
+import { Loading } from '@/shared';
 import React from 'react';
 
 export async function generateMetadata(
@@ -69,6 +69,7 @@ const Film = async ({ params }: SearchParams) => {
         staff={Actors || {}}
         PrequelsAndSequels={PrequelsAndSequels}
         similarMovies={similarMovies}
+        movieId={id}
       />
     </div>
   );

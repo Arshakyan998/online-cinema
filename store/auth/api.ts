@@ -1,11 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
 import CustomBaseQuery from '../baseQuery';
-import { IResponseAnswer } from '../types';
+import { IResponseAnswer } from '../../GlobalTypes/Film';
 import { User } from '@/GlobalTypes/User';
 const Auth = createApi({
-  baseQuery: (...args) => CustomBaseQuery(...args, true),
   reducerPath: 'auth/users',
+  baseQuery: (...args) => CustomBaseQuery(...args, true),
   endpoints: build => ({
     createUser: build.mutation<User, ICreateUserDate>({
       query: body => ({

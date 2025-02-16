@@ -1,4 +1,4 @@
-import { ICountry, IGenre } from "../types";
+import { ICountry, IGenre } from "../../GlobalTypes/Film";
 
 
 export  interface IActor {

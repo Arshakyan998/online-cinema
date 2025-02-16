@@ -1,5 +1,5 @@
 import { filmApiGetById } from './api';
-import { IData } from '../types';
+import { IData } from '../../GlobalTypes/Film';
 
 export const extendsFilmByKeyword = filmApiGetById.injectEndpoints({
   endpoints: builder => ({

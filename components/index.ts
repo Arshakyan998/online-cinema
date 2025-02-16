@@ -4,3 +4,4 @@ export { default as SignIn } from './loginPage/SignIn';
 
 export { default as Favorites } from './favoritesPage/Favorites';
 export { default as Sections } from './mainPage/Sections';
+export {default as Staff}  from './staffPage/Staff'

@@ -5,7 +5,7 @@ import baseQuery from '../baseQuery';
 import { IFilm } from './type';
 
 export const filmApiGetById = createApi({
-  reducerPath: 'getFilmById',
+  reducerPath: 'getFilmById/api',
   baseQuery,
   extractRehydrationInfo,
   endpoints: builder => ({

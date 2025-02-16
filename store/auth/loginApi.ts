@@ -1,7 +1,6 @@
 import { ICreateUserDate } from '@/GlobalTypes/Auth';
 import { Tokens, User } from '@/GlobalTypes/User';
-import { IResponseAnswer } from '../types';
-import { LogOut } from 'lucide-react';
+import { IResponseAnswer } from '../../GlobalTypes/Film';
 import Auth from './api';
 
 const loginApi = Auth.injectEndpoints({

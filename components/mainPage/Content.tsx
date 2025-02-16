@@ -1,10 +1,10 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { ContentWithVirgule, Loading } from '../../shared';
 import { SerializedError } from '@reduxjs/toolkit';
 import { filmsApi } from '@/store/filmsQuery/api';
 import { Clapperboard } from 'lucide-react';
 import { store } from '@/store/store';
-import { IData } from '@/store/types';
-import { Loading } from '../../shared';
+import { IData } from '@/GlobalTypes/Film';
 import Button from '@/uiKit/Button';
 import Helper from '@/utils/Helper';
 import { NextPage } from 'next';
@@ -59,12 +59,12 @@ export const Content: NextPage<Props> = ({ isLoading, error, data }) => {
                     </li>
                   </ul>
                   <p className="text-white mb-8">
-                    <strong className="text-gray-400">Жанр{lastKey} </strong>{' '}
-                    {Helper.addVirgule(
-                      dataForMainPoster?.genres,
-                      'genre',
-                      'span',
-                    )}
+                    <strong className="text-gray-400">Жанр{lastKey} </strong>
+                    <ContentWithVirgule data={dataForMainPoster?.genres}>
+                      {data => {
+                        return <span key={data.genre}> {data.genre}</span>;
+                      }}
+                    </ContentWithVirgule>
                   </p>
                   <div className="flex gap-4">
                     <Button href={`/film/${dataForMainPoster.kinopoiskId}`} />

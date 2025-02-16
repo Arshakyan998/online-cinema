@@ -1,4 +1,4 @@
-import { IFilms, IResponseAnswer } from '../types';
+import { IFilms, IResponseAnswer } from '../../GlobalTypes/Film';
 import favoriteMovieApi from './api';
 
 const favoriteMovies = favoriteMovieApi.injectEndpoints({

@@ -25,6 +25,7 @@ export interface IFilms {
   description: string;
   rating?: string | number;
   filmId: number;
+  professionKey?: string
 }
 
 export type IData<KeyType extends 'items' | 'films'> = {

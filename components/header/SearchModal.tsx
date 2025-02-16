@@ -4,14 +4,23 @@ import { saveGenres } from '@/store/genreQuery/saveGeners';
 import { useGetGenresQuery } from '@/store/genreQuery/api';
 import { IGenre } from '@/GlobalTypes/Genre';
 import { Button, Input, Tag } from '@/uiKit';
-import { createPortal } from 'react-dom';
 import { useAppDispatch } from '@/hooks';
+
+import CyrillicToTranslit from 'cyrillic-to-translit-js';
+import { createPortal } from 'react-dom';
 import React, { memo } from 'react';
 import { Form } from 'antd';
 
 interface Props {
   closeFunction: (isOpne: boolean) => void;
 }
+
+const dictionary: Record<string, string> = {
+  vlastelin: 'властелин',
+  kolec: 'колец',
+  kolco: 'кольцо',
+  hobbit: 'хоббит',
+};
 
 const SearchModal: React.FC<Props> = ({ closeFunction }) => {
   const { data, isLoading, error } = useGetGenresQuery(undefined);
@@ -73,7 +82,12 @@ const SearchModal: React.FC<Props> = ({ closeFunction }) => {
   };
 
   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+    const words = e.currentTarget.value
+      .split(' ')
+      .map(word => dictionary[word] || CyrillicToTranslit().reverse(word));
+    const result = words.join(' ');
+    console.log(result);
+    setSearchValue(result);
     updatePath('moviesName');
   };
 

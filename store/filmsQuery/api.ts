@@ -1,7 +1,7 @@
 import baseQuery from "../baseQuery";
 import { extractRehydrationInfo } from "../hydrate";
 
-import { IData } from "../types";
+import { IData } from "../../GlobalTypes/Film";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const filmsApi = createApi({

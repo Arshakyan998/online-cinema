@@ -1,5 +1,7 @@
 import { FavoritesWithoutId } from '@/GlobalTypes/Favorites';
-import type { IFilms } from '@/store/types';
+import { Content } from '@/components/mainPage/Content';
+import ContentWithVirgule from './ContentWithVirgule';
+import type { IFilms } from '@/GlobalTypes/Film';
 import { Heart } from 'lucide-react';
 import Helper from '@/utils/Helper';
 import Image from 'next/image';
@@ -13,6 +15,7 @@ interface Props extends IFilms {
   showFavoriteIcon: boolean;
   IsFavorite?: boolean;
   removeFromFavorites: (filmId: number) => void;
+  professionKey?: string;
 }
 
 const Cart: React.FC<Props> = ({
@@ -27,6 +30,7 @@ const Cart: React.FC<Props> = ({
   showFavoriteIcon,
   IsFavorite,
   removeFromFavorites,
+  professionKey,
 }) => {
   return (
     <div className=" rounded-lg overflow-hidden  cursor-pointer  mx-2">
@@ -40,8 +44,16 @@ const Cart: React.FC<Props> = ({
           width={500}
           style={{
             height: imgHeight || '100%',
+            maxHeight: '540px',
           }}
         />
+
+        {professionKey && (
+          <span className="absolute top-1 bg-black p-1  rounded-tr-md rounded-br-md">
+            Специалность в фильме {professionKey}
+          </span>
+        )}
+
         {showFavoriteIcon &&
           (IsFavorite ? (
             <Heart
@@ -81,7 +93,11 @@ const Cart: React.FC<Props> = ({
           )}
         </div>
         <h6 className="text-sm text-gray-400">
-          {Helper.addVirgule(genres, 'genre', 'span')}
+          <ContentWithVirgule data={genres}>
+            {data => {
+              return <span>{data.genre}</span>;
+            }}
+          </ContentWithVirgule>
         </h6>
       </div>
     </div>

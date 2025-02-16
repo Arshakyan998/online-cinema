@@ -1,4 +1,4 @@
-import { IData } from "../types";
+import { IData } from "../../GlobalTypes/Film";
 import { filmApiGetById } from "./api";
 import type { IActor } from "./type";
 export const extendsFilmByQueryApi = filmApiGetById.injectEndpoints({

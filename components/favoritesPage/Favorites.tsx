@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 
 import { SectionWithCategory } from '@/shared';
 import { useAppSelector } from '@/hooks';
-import { IData } from '@/store/types';
+import { IData } from '@/GlobalTypes/Film';
 
 const Favorites: React.FC = () => {
   const userId = useAppSelector(state => state['user/data'].user.id);
